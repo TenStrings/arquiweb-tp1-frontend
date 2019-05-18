@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Card } from 'antd';
+import { Row, Col, Card, message } from 'antd';
 
 import MainMap from '../components/MainMap';
 import POIFilter from '../components/POIFilter'
@@ -7,6 +7,7 @@ import CategoryFilter from '../components/CategoryFilter'
 
 import { PointAddForm } from '../components/PointModal';
 
+import { poiAPI } from '../api';
 
 class Home extends Component {
   NoFilter = function (points) { return points }
@@ -57,6 +58,13 @@ class Home extends Component {
   }
 
   handleAddPointConfirm = () => {
+    this.setState(state => {
+      const { prevModal } = state
+      const newModal = Object.assign({}, prevModal)
+      newModal.confirmLoading = true
+      return newModal
+    })
+
     const form = this.formRef.props.form;
     form.validateFields((err, values) => {
       if (err) {
@@ -64,11 +72,21 @@ class Home extends Component {
       }
 
       const newPoint = { ...values };
-      console.log(newPoint);
-      alert(`new point ${JSON.stringify(newPoint)}`)
 
-      form.resetFields();
-      this.setState({ modal: null });
+      //Creo que esto no debería ser un parámetro del endpoint
+      newPoint.visible = true
+
+      const promise = poiAPI.add(newPoint)
+      promise
+        .then(_ => {
+          message.success("Punto agregado correctamente")
+          form.resetFields()
+          this.setState({ modal: null }, this.props.notifyPoiChange)
+        }).catch(e => {
+          message.error("No pudo insertarse el nuevo punto")
+          console.log(e)
+        })
+
     });
   }
 
@@ -85,6 +103,8 @@ class Home extends Component {
   render() {
     const { points, categories } = this.props
 
+    const modalConfirmLoading = this.state.modal && this.state.modal.confirmLoading
+
     return (
       <div className="App">
         <PointAddForm
@@ -92,6 +112,7 @@ class Home extends Component {
           visible={Boolean(this.state.modal)}
           onCancel={this.handleAddPointCancel}
           onConfirm={this.handleAddPointConfirm}
+          confirmLoading={modalConfirmLoading}
           categories={categories}
         />
         <Row id="Mapa">

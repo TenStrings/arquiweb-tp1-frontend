@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const categoriesMock = [
     { title: "Food", icon: "idk1" },
     { title: "Night Life", icon: "idk2" },
@@ -22,7 +24,7 @@ const pointsMock = [
 ]
 
 //return Promise.resolve(categoriesMock)
-
+const apiServer = "http://localhost:4000"
 export const categoriesAPI = {
     all: function () {
         return Promise.resolve(categoriesMock)
@@ -38,6 +40,9 @@ export const poiAPI = {
     },
     hide: function (pointId, token) {
         return new Promise(resolve => setTimeout(resolve, 1000))
+    },
+    add: function(point) { 
+        return axios.post(`${apiServer}/point`, point);
     }
 }
 

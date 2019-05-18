@@ -41,7 +41,6 @@ class App extends Component {
 
   }
 
-
   loadPointsFromAPI = () => axios.get('http://localhost:4000/point')
     .then(res => {
       //console.log(res.data);
@@ -71,7 +70,10 @@ class App extends Component {
         <Router>
           <AuthenticatedNavigationMenu />
           <Switch>
-            {categories.length > 0 && <Route exact path='/' render={props => (<Home {...props} points={visiblePoints} categories={categories} />)} />}
+            {categories.length > 0 && 
+            <Route exact path='/' render={
+              props => (<Home {...props} points={visiblePoints} categories={categories} notifyPoiChange={this.onPointChange} />)
+            } />}
             <Route path='/backoffice_categories' component={BackofficeCategories} />
             <Route path='/login' component={ContextLogin} />
             <Route path="/backoffice_points" render={(props) => (
