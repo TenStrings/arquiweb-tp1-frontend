@@ -59,6 +59,13 @@ class App extends Component {
     this.loadPointsFromAPI()
   }
 
+  onCategoryChange = () => {
+    //TODO: Hacer una especie de join?
+    this.loadCategoriesFromAPI()
+    //Porque si se ocultaron categorías podrían cambiar los puntos
+    this.loadPointsFromAPI()
+  }
+
   getPoints = () => poiAPI.all().then(points => this.setState({ points: points }))
 
   getCategories = () => categoriesAPI.all().then(
@@ -81,7 +88,10 @@ class App extends Component {
             <Route path='/login' component={ContextLogin} />
             <Route path="/backoffice_points" render={(props) => (
               <ContextBackofficePoints {...props} key={points} notifyPointChanged={this.onPointChange} points={points} categories={categories} />)} />
-            <Route path='/backoffice_approved_categories' component={BackofficeCategories} />
+            <Route path='/backoffice_approved_categories' component={
+              props => <BackofficeCategories {...props}
+              categories={categories}
+              notifyCategoryChange={ this.onCategoryChange } />} />
             <Route path='/backoffice_suggested_categories' component={BackofficeSugCategories} />
 
           </Switch>

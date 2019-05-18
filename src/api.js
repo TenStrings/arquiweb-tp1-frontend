@@ -28,7 +28,10 @@ const apiServer = "http://localhost:4000"
 export const categoriesAPI = {
     all: function () {
         return Promise.resolve(categoriesMock)
-    }
+    },
+    update: function (category) {
+        return axios.put(`http://localhost:4000/category/${category._id}`, category)
+    },
 }
 
 export const poiAPI = {
@@ -41,7 +44,7 @@ export const poiAPI = {
     hide: function (pointId, token) {
         return new Promise(resolve => setTimeout(resolve, 1000))
     },
-    add: function(point) { 
+    add: function (point) {
         return axios.post(`${apiServer}/point`, point);
     }
 }
