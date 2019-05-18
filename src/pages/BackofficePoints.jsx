@@ -8,8 +8,7 @@ class BackofficePoints extends Component {
 
   updatePoint = (point) => axios.put('http://localhost:4000/point/' + point._id, point)
     .then(_ => {
-      this.props.notifyPointChanged()
-      this.toggleLoading(point._id)
+      this.props.notifyPoiChange()
     }).catch(() => console.log("BackofficePoints failed to update point"));
 
   //**************** Visibility Switch ****************//
@@ -30,7 +29,9 @@ class BackofficePoints extends Component {
     this.toggleLoading(pointId)
     let pointToUpdate = this.props.points.find(point => point._id === pointId)
     pointToUpdate.visible = !checked
-    this.updatePoint(pointToUpdate)
+    this.updatePoint(pointToUpdate).then(
+      () => this.toggleLoading(pointToUpdate._id)
+    )
   }
 
   //**************** Edit button *****************//
