@@ -21,62 +21,84 @@ class NavigationMenu extends Component {
     const { user } = this.props.userContext
 
     return (
-      <Menu
-        onClick={this.handleClick}
-        selectedKeys={[this.state.current]}
-        mode="horizontal"
-      >
-        <Menu.Item key="map">
-          <Link to="/">
-            <Icon type="pushpin" />
-            Mapa
-          </Link>
-        </Menu.Item>
+        <Menu
+          onClick={this.handleClick}
+          selectedKeys={[this.state.current]}
+          mode="horizontal"
+        >
+            <Menu.Item key="map">
+              <Link to="/">
+                <Icon type="search" />
+                Mapa
+              </Link>
+            </Menu.Item>
 
-        <SubMenu title={<span><Icon type="tags" />Colaborar</span>}>
-          <Menu.Item key="addPoint">Agregar marcador (temp)</Menu.Item>
-          <Menu.Item key="suggestCat">Sugerir nueva categoría</Menu.Item>
-        </SubMenu>
-        {user && user.admin &&
-          (<SubMenu title={<span><Icon type="setting" />Backoffice</span>}>
-            <Menu.Item key="addPoint">
-              <Link to="/backoffice_points"></Link>
-              Marcadores
+            <Menu.Item key="suggest_category">
+                <Icon type="tags" />
+                Sugerir categoría
             </Menu.Item>
-            <Menu.Item key="suggestCat">
-              <Link to="/backoffice_categories"></Link>
-              Categorías
-            </Menu.Item>
-          </SubMenu>)
-        }
-        {
-          user &&
-          (
-            <Menu.Item key="logout">
-              <Icon type="logout" />Logout
-            </Menu.Item>
-          )
-        }
-        {
-          !user &&
-          (
-            <Menu.Item key="login">
-              <Link to="/login">
-                <Icon type="login" />Login
-            </Link>
-            </Menu.Item>
-          )
-        }
-        {
-          !user &&
-          (
-            <Menu.Item key="signUp">
-              <Link to="/login">
-                <Icon type="form" />Sign up
-                        </Link>
-            </Menu.Item>
-          )
-        }
+
+            {user && user.admin &&
+            <SubMenu title={<span><Icon type="setting" />Backoffice</span>}>
+                <Menu.Item key="backoffice_points">
+                  <Link to="/backoffice_points"></Link>
+                  <span>
+                    <Icon type="pushpin" />
+                    <span>Marcadores</span>
+                  </span>
+                </Menu.Item>
+
+                <SubMenu
+                  key="subumenu_categorias"
+                  title={
+                    <span>
+                      <Icon type="tags" />
+                      <span>Categorias</span>
+                    </span>
+                  }
+                >
+                    <Menu.Item key="backoffice_approved_categories">
+                      <Link to="/backoffice_approved_categories"></Link>
+                      Aprobadas
+                    </Menu.Item>
+
+                    <Menu.Item key="backoffice_suggested_categories">
+                      <Link to="/backoffice_suggested_categories"></Link>
+                      Solicitadas
+                    </Menu.Item>
+
+                </SubMenu>
+          </SubMenu>
+          }
+
+          {
+            user &&
+            (
+              <Menu.Item key="logout">
+                <Icon type="logout" />Logout
+              </Menu.Item>
+            )
+          }
+          {
+            !user &&
+            (
+              <Menu.Item key="login">
+                <Link to="/login">
+                  <Icon type="login" />Login
+              </Link>
+              </Menu.Item>
+            )
+          }
+          {
+            !user &&
+            (
+              <Menu.Item key="signUp">
+                <Link to="/login">
+                  <Icon type="form" />Sign up
+                          </Link>
+              </Menu.Item>
+            )
+          }
       </Menu>
     );
   }

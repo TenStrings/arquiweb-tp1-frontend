@@ -45,10 +45,10 @@ class MainMap extends Component {
             </Marker>
         )
 
-        if (this.props.ShowMyPosition) {
+        if (this.props.showMyPosition) {
             const myPostionMarker = (
                 <Marker key="mapCenter" position={this.state.currentPosition} >
-                    <Popup>{(<div> Title: MyPosition </div>)}</Popup>
+                    <Popup>{(<div> My position </div>)}</Popup>
                 </Marker>
             )
             markers.push(myPostionMarker)

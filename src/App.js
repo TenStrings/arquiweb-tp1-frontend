@@ -3,8 +3,9 @@ import './App.css';
 import NavigationMenu from './components/NavigationMenu';
 import Home from './pages/Home';
 import Login from './pages/Login';
-import BackofficeCategories from './pages/BackofficeCategories';
 import BackofficePoints from './pages/BackofficePoints';
+import BackofficeCategories from './pages/BackofficeCategories';
+import BackofficeSugCategories from './pages/BackofficeSugCategories';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { withUserContext } from './context/withUserContext';
 import UserProvider from './context/UserProvider';
@@ -70,14 +71,16 @@ class App extends Component {
         <Router>
           <AuthenticatedNavigationMenu />
           <Switch>
-            {categories.length > 0 && 
+            {categories.length > 0 &&
             <Route exact path='/' render={
               props => (<Home {...props} points={visiblePoints} categories={categories} notifyPoiChange={this.onPointChange} />)
             } />}
-            <Route path='/backoffice_categories' component={BackofficeCategories} />
             <Route path='/login' component={ContextLogin} />
             <Route path="/backoffice_points" render={(props) => (
               <ContextBackofficePoints {...props} key={points} notifyPoiChange={this.onPointChange} points={points} categories={categories} />)} />
+            <Route path='/backoffice_approved_categories' component={BackofficeCategories} />
+            <Route path='/backoffice_suggested_categories' component={BackofficeSugCategories} />
+
           </Switch>
         </Router>
       </UserProvider>

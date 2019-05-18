@@ -121,7 +121,7 @@ class Home extends Component {
               style={{ height: '600px' }}
               markers={this.getFilteredMarkers()}
               onClick={this.onMapClick}
-              ShowMyPosition={true}
+              showMyPosition={true}
               onNewPoint={this.onNewPoint}
             />
           </Col>
