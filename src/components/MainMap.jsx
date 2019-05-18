@@ -15,8 +15,7 @@ L.Icon.Default.mergeOptions({
 const tiles = "https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
 const stamenTonerAttr = 'change this';
 const zoomLevel = 12;
-const FCENLocation = [39.9528, -75.1638];
-
+const FCENLocation = [-34.5443, -58.43961596488953];
 
 class MainMap extends Component {
     state = {

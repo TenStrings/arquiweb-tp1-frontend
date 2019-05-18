@@ -138,7 +138,7 @@ class Home extends Component {
               title="Match if name starts with..."
               style={{ width: 300 }}
             >
-              <POIFilter onChange={this.setNameFilter} poi={points}></POIFilter>
+              <POIFilter onChange={this.OnNameFilterChange} poi={points}></POIFilter>
             </Card>
           </Col>
 
@@ -149,7 +149,7 @@ class Home extends Component {
             >
               <CategoryFilter
                 key={categories}
-                updateMapWith={this.setCategoryFilter}
+                updateMapWith={this.OnCategoryFilterChange}
                 categories={categories}
               />
             </Card>

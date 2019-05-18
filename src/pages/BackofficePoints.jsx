@@ -6,6 +6,14 @@ import { PointEditForm } from '../components/PointModal';
 class BackofficePoints extends Component {
   state = { loading: {} }
 
+  updatePoint = (point) => axios.put('http://localhost:4000/point/' + point._id, point)
+    .then(_ => {
+      this.props.notifyPointChanged()
+      this.toggleLoading(point._id)
+    }).catch(() => console.log("BackofficePoints failed to update point"));
+
+  //**************** Visibility Switch ****************//
+
   toggleLoading(pointId) {
     this.setState(
       prevState => {
@@ -17,19 +25,15 @@ class BackofficePoints extends Component {
     )
   }
 
-  updatePoint = (point) => axios.put('http://localhost:4000/point/' + point._id, point)
-    .then(_ => {
-      this.props.notifyPoiChange()
-      this.toggleLoading(point._id)
-    }).catch(() => console.log("BackofficePoints failed to update point"));
-
-  onChange = (checked, pointId) => {
+  onVisibilityChange = (checked, pointId) => {
     //const { userContext } = this.props
     this.toggleLoading(pointId)
     let pointToUpdate = this.props.points.find(point => point._id === pointId)
     pointToUpdate.visible = !checked
     this.updatePoint(pointToUpdate)
   }
+
+  //**************** Edit button *****************//
 
   showEditModal = point => {
     const form = this.formRef.props.form;
@@ -65,6 +69,8 @@ class BackofficePoints extends Component {
       this.setState({ modal: null });
     });
   }
+
+  //**********************************************//
 
   render() {
     const columns = [
@@ -110,7 +116,7 @@ class BackofficePoints extends Component {
         img: "unBoton a img",
         cat: point.categoryName,
         visible: <Switch loading={loading[point._id]} defaultChecked={point.visible} onChange={checked =>
-          this.onChange(checked, point._id)
+          this.onVisibilityChange(checked, point._id)
         } />,
         edit: <Button type="primary" shape="circle" icon="edit" onClick={
           () => this.showEditModal(point)

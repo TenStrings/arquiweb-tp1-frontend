@@ -54,14 +54,17 @@ class App extends Component {
       this.setState({ categories: res.data });
     });
 
-  onPointChange = () => this.loadPointsFromAPI()
+  onPointChange = () => {
+    console.log("OnPointChange")
+    this.loadPointsFromAPI()
+  }
 
   getPoints = () => poiAPI.all().then(points => this.setState({ points: points }))
 
   getCategories = () => categoriesAPI.all().then(
     categories => this.setState({ categories: categories })
   )
-  selected_categories
+
   //<Route path='/backoffice_points' component={ContextBackofficePoints} />
   render() {
     const { points, categories } = this.state;
@@ -77,7 +80,7 @@ class App extends Component {
             } />}
             <Route path='/login' component={ContextLogin} />
             <Route path="/backoffice_points" render={(props) => (
-              <ContextBackofficePoints {...props} key={points} notifyPoiChange={this.onPointChange} points={points} categories={categories} />)} />
+              <ContextBackofficePoints {...props} key={points} notifyPointChanged={this.onPointChange} points={points} categories={categories} />)} />
             <Route path='/backoffice_approved_categories' component={BackofficeCategories} />
             <Route path='/backoffice_suggested_categories' component={BackofficeSugCategories} />
 
