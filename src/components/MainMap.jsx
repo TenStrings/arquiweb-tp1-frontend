@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import '../../node_modules/leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { Button } from 'antd';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -19,7 +20,7 @@ const FCENLocation = [39.9528, -75.1638];
 
 class MainMap extends Component {
     state = {
-      currentPosition : FCENLocation
+        currentPosition: FCENLocation
     }
 
     componentDidMount() {
@@ -28,31 +29,30 @@ class MainMap extends Component {
 
     //TODO update every 10 seconds
     updateCurrentPosition = () => {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.setState((state, props) =>
-          ({
-            currentPosition: [position.coords.latitude, position.coords.longitude],
-          })
-        )
-      })
+        navigator.geolocation.getCurrentPosition((position) => {
+            this.setState((state, props) =>
+                ({
+                    currentPosition: [position.coords.latitude, position.coords.longitude],
+                })
+            )
+        })
     }
 
-    getMarkers = function() {
+    getMarkers = function () {
         let markers = this.props.markers.map(marker =>
             <Marker key={marker.key} position={marker.position} >
                 <Popup>{marker.popUpContent}</Popup>
             </Marker>
         )
 
-        if(this.props.ShowMyPosition) {
-          const myPostionMarker = (
-            <Marker key={"mapCenter"} position={this.state.currentPosition} >
-                <Popup>{ (<div> Title: MyPosition </div>)}</Popup>
-            </Marker>
-          )
-          markers.push(myPostionMarker)
+        if (this.props.ShowMyPosition) {
+            const myPostionMarker = (
+                <Marker key="mapCenter" position={this.state.currentPosition} >
+                    <Popup>{(<div> Title: MyPosition </div>)}</Popup>
+                </Marker>
+            )
+            markers.push(myPostionMarker)
         }
-
         return markers
     }
     //Events
@@ -63,10 +63,23 @@ class MainMap extends Component {
     }
 
     onContextMenu = e => {
-        alert("Testing context menu event")
+        this.setState(
+            {
+                popup: {
+                    position: e.latlng,
+                }
+            }
+        )
+    }
+
+    onAddPointClick = () => {
+        const { popup } = this.state
+        this.props.onNewPoint(popup.position)
+        this.setState({ popup: null })
     }
 
     render() {
+        const { popup } = this.state;
         return (
             <Map
                 center={this.state.currentPosition}
@@ -80,6 +93,13 @@ class MainMap extends Component {
                     url={tiles}
                 />
                 {this.props.markers && this.getMarkers()}
+                {popup &&
+                    <Popup position={popup.position}>
+                        <div>
+                            <Button onClick={this.onAddPointClick}>Agregar punto de interés</Button>
+                        </div>
+                    </Popup>
+                }
             </Map>
         );
     }

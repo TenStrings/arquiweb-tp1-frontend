@@ -5,24 +5,26 @@ import MainMap from '../components/MainMap';
 import POIFilter from '../components/POIFilter'
 import CategoryFilter from '../components/CategoryFilter'
 
+import { PointAddForm } from '../components/PointModal';
+
 
 class Home extends Component {
-  NoFilter = function(points){return points}
+  NoFilter = function (points) { return points }
 
   //TODO FilterProvider component to tidy up
   state = {
     nameFilter: this.NoFilter,
-    categoryFilter : this.NoFilter,
+    categoryFilter: this.NoFilter,
   }
 
-  getFilteredMarkers =  function() {
+  getFilteredMarkers = function () {
     const { points } = this.props
-    const { nameFilter, categoryFilter} = this.state
+    const { nameFilter, categoryFilter } = this.state
     const filteredPoints = nameFilter(categoryFilter(points))
     return filteredPoints.map(point => ({
-          position: point.position,
-          popUpContent: (<div> Name: {point.name} <br/> Description: {point.description}</div>),
-          key: point.id,
+      position: point.position,
+      popUpContent: (<div> Name: {point.name} <br /> Description: {point.description}</div>),
+      key: point.name,
     }))
   }
 
@@ -35,57 +37,103 @@ class Home extends Component {
   }
 
   OnNameFilterChange = aFilter => {
-      this.setState({ nameFilter: aFilter })
+    this.setState({ nameFilter: aFilter })
   }
 
   OnCategoryFilterChange = aFilter => {
-      this.setState({ categoryFilter: aFilter })
+    this.setState({ categoryFilter: aFilter })
+  }
+
+  onNewPoint = position => {
+    const form = this.formRef.props.form;
+    form.setFieldsValue(
+      { position: position },
+      () => this.setState({
+        modal: {
+          position: position
+        }
+      })
+    )
+  }
+
+  handleAddPointConfirm = () => {
+    const form = this.formRef.props.form;
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+
+      const newPoint = { ...values };
+      console.log(newPoint);
+      alert(`new point ${JSON.stringify(newPoint)}`)
+
+      form.resetFields();
+      this.setState({ modal: null });
+    });
+  }
+
+  handleAddPointCancel = () => {
+    const form = this.formRef.props.form;
+    form.resetFields()
+    this.setState({ modal: null })
+  }
+
+  saveFormRef = formRef => {
+    this.formRef = formRef
   }
 
   render() {
-    const { points, categories} = this.props
+    const { points, categories } = this.props
 
     return (
       <div className="App">
-          <Row id="Mapa">
-              <Col>
-                  <MainMap
-                  style={{ height: '600px' }}
-                  markers={this.getFilteredMarkers()}
-                  onClick={this.onMapClick}
-                  ShowMyPosition={true}
-                  />
-              </Col>
-          </Row>
+        <PointAddForm
+          wrappedComponentRef={this.saveFormRef}
+          visible={Boolean(this.state.modal)}
+          onCancel={this.handleAddPointCancel}
+          onConfirm={this.handleAddPointConfirm}
+          categories={categories}
+        />
+        <Row id="Mapa">
+          <Col>
+            <MainMap
+              style={{ height: '600px' }}
+              markers={this.getFilteredMarkers()}
+              onClick={this.onMapClick}
+              ShowMyPosition={true}
+              onNewPoint={this.onNewPoint}
+            />
+          </Col>
+        </Row>
 
-          <Row style={{ background: '#ECECEC'}}> <hr className="my-2" /> </Row>
+        <Row style={{ background: '#ECECEC' }}> <hr className="my-2" /> </Row>
 
-          <Row id="Filtros"
-               style={{ background: '#ECECEC', padding: '20px' }}
-               type="flex"
-          >
-              <Col offset={1}>
-                  <Card
-                      title="Match if name starts with..."
-                      style={{ width: 300 }}
-                  >
-                      <POIFilter onChange={this.setNameFilter} poi={points}></POIFilter>
-                  </Card>
-              </Col>
+        <Row id="Filtros"
+          style={{ background: '#ECECEC', padding: '20px' }}
+          type="flex"
+        >
+          <Col offset={1}>
+            <Card
+              title="Match if name starts with..."
+              style={{ width: 300 }}
+            >
+              <POIFilter onChange={this.setNameFilter} poi={points}></POIFilter>
+            </Card>
+          </Col>
 
-              <Col offset={1}>
-                  <Card
-                    title="Match if belongs to any of the listed categories."
-                    style={{ width: 500 }}
-                  >
-                      <CategoryFilter
-                        key={categories}
-                        updateMapWith={this.setCategoryFilter}
-                        categories={categories}
-                      />
-                  </Card>
-              </Col>
-          </Row>
+          <Col offset={1}>
+            <Card
+              title="Match if belongs to any of the listed categories."
+              style={{ width: 500 }}
+            >
+              <CategoryFilter
+                key={categories}
+                updateMapWith={this.setCategoryFilter}
+                categories={categories}
+              />
+            </Card>
+          </Col>
+        </Row>
       </div>
     );
 

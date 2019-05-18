@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Table, Button, Switch } from 'antd';
 import axios from 'axios';
-import PointModal from '../components/PointModal';
+import { PointEditForm } from '../components/PointModal';
 
 class BackofficePoints extends Component {
   state = { loading: {} }
@@ -18,14 +18,14 @@ class BackofficePoints extends Component {
   }
 
   updatePoint = (point) => axios.put('http://localhost:4000/point/' + point._id, point)
-    .then(res => {
+    .then(_ => {
       this.props.notifyPoiChange()
-      //this.toggleLoading(point._id)
+      this.toggleLoading(point._id)
     }).catch(() => console.log("BackofficePoints failed to update point"));
 
   onChange = (checked, pointId) => {
     //const { userContext } = this.props
-    //this.toggleLoading(pointId)
+    this.toggleLoading(pointId)
     let pointToUpdate = this.props.points.find(point => point._id === pointId)
     pointToUpdate.visible = !checked
     this.updatePoint(pointToUpdate)
@@ -57,8 +57,6 @@ class BackofficePoints extends Component {
       }
 
       const newPoint = {...this.state.modal, ...values };
-
-      console.log(newPoint)
 
       //TODO: Probablemente esto debería ser una promise
       this.updatePoint(newPoint)
@@ -124,7 +122,7 @@ class BackofficePoints extends Component {
     return (
       <React.Fragment>
         <Table columns={columns} dataSource={data} scroll={{ y: 600 }} />);
-        <PointModal
+        <PointEditForm
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
           onCancel={this.handleCancel}
