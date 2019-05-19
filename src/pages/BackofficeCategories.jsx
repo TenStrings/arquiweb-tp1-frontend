@@ -24,9 +24,9 @@ class BackofficeCategories extends Component {
       .then(() => notifyCategoryChange())
   }
 
-  onChange = (checked, category) => {
+  onVisibilityChange = (checked, category) => {
     this.toggleLoading(category)
-    this.updateCategory({ ...category, visible: !checked })
+    this.updateCategory({ ...category, visible: checked })
       .finally(() => this.toggleLoading(category))
       .then(() => message.success("La categoría se actualizó correctamente"))
       .catch(() => message.error("La categoría no pudo actualizarse"))
@@ -117,7 +117,7 @@ class BackofficeCategories extends Component {
             loading={loading[category._id]}
             defaultChecked={category.visible}
             onChange={
-              checked => this.onChange(checked, category)}
+              checked => this.onVisibilityChange(checked, category)}
           />,
         edit: <Button type="primary" shape="circle" icon="edit" onClick={
           () => this.showEditModal(category)

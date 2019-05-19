@@ -33,10 +33,6 @@ class Home extends Component {
     console.log(latlong)
   }
 
-  onMapClick = (latlong) => {
-    console.log(latlong)
-  }
-
   OnNameFilterChange = aFilter => {
     this.setState({ nameFilter: aFilter })
   }
@@ -81,7 +77,7 @@ class Home extends Component {
         .then(_ => {
           message.success("Punto agregado correctamente")
           form.resetFields()
-          this.setState({ modal: null }, this.props.notifyPoiChange)
+          this.setState({ modal: null }, this.props.notifyPointChange)
         }).catch(e => {
           message.error("No pudo insertarse el nuevo punto")
           console.log(e)
