@@ -29,8 +29,11 @@ export const categoriesAPI = {
     all: function () {
         return Promise.resolve(categoriesMock)
     },
-    update: function (category) {
-        return axios.put(`http://localhost:4000/category/${category._id}`, category)
+    update: function (category, token) {
+        return axios.put(
+            `http://localhost:4000/category/${category._id}`,
+            category, { headers: { "Authorization": `Bearer ${token}` } }
+        )
     },
 }
 
@@ -46,14 +49,23 @@ export const poiAPI = {
     },
     add: function (point) {
         return axios.post(`${apiServer}/point`, point);
+    },
+    update: function (point, token) {
+        return axios.put('http://localhost:4000/point/' + point._id,
+            point,
+            { headers: { "Authorization": `Bearer ${token}` } }
+        )
     }
 }
 
 export const userAPI = {
     authenticate: function (username, password) {
-        return fakeUsers.find(
-            user => user.username === username && user.password === password
-        ).token
+        return axios.post(`http://localhost:4000/auth/login`, {
+            username: username,
+            password: password
+        }).then(
+            response => response["data"]["access_token"]
+        )
     },
 }
 

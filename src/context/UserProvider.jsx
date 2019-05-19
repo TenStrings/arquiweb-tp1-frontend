@@ -21,7 +21,7 @@ class UserProvider extends Component {
             let token = await userAPI.authenticate(username, password)
             localStorage.setItem("token", token)
             this.setState({
-                user: decode(token)
+                user: decode(token)["user_claims"]
             })
         } catch (err) {
             alert(err);

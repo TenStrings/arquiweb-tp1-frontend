@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { Table, Button, Switch } from 'antd';
-import axios from 'axios';
 import { PointEditForm } from '../components/PointModal';
+import { poiAPI } from '../api';
 
 class BackofficePoints extends Component {
   state = { loading: {} }
 
-  updatePoint = (point) => axios.put('http://localhost:4000/point/' + point._id, point)
+  updatePoint = (point) => poiAPI.update(point, this.props.userContext.token)
     .then(_ => {
-      this.props.notifyPoiChange()
-    }).catch(() => console.log("BackofficePoints failed to update point"));
+      this.props.notifyPointChanged()
+    }).catch(e => console.log(e));
 
   //**************** Visibility Switch ****************//
 
