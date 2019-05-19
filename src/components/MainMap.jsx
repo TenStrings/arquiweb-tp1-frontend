@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Map, TileLayer, Marker, Popup } from 'react-leaflet';
 import '../../node_modules/leaflet/dist/leaflet.css';
+import { Sidebar, Tab } from 'react-leaflet-sidebarv2';
+import '../../node_modules/sidebar-v2/css/leaflet-sidebar.min.css'
 import L from 'leaflet';
-import { Button } from 'antd';
+import { Button, Icon } from 'antd';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -19,7 +21,9 @@ const FCENLocation = [-34.5443, -58.43961596488953];
 
 class MainMap extends Component {
     state = {
-        currentPosition: FCENLocation
+        currentPosition: FCENLocation,
+        collapsed: true,
+        selected: 'home'
     }
 
     componentDidMount() {
@@ -77,29 +81,59 @@ class MainMap extends Component {
         this.setState({ popup: null })
     }
 
+    onClose() {
+        this.setState({collapsed: true});
+    }
+    onOpen(id) {
+        this.setState({
+        collapsed: false,
+        selected: id,
+        })
+    }
+
     render() {
         const { popup } = this.state;
         return (
-            <Map
-                center={this.state.currentPosition}
-                zoom={zoomLevel}
-                style={{ height: '200px', ...this.props.style }}
-                onClick={this.onClick}
-                onContextMenu={this.onContextMenu}
-            >
-                <TileLayer
-                    attribution={stamenTonerAttr}
-                    url={tiles}
-                />
-                {this.props.markers && this.getMarkers()}
-                {popup &&
-                    <Popup position={popup.position}>
-                        <div>
-                            <Button onClick={this.onAddPointClick}>Agregar punto de interés</Button>
-                        </div>
-                    </Popup>
-                }
-            </Map>
+            <div>
+                <Sidebar
+                id="sidebar"
+                collapsed={this.state.collapsed}
+                selected={this.state.selected}
+                closeIcon={<Icon type="left"/>}
+                onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}>
+                    {this.props.tabs.map(tab => 
+                        <Tab
+                            id={tab.id} 
+                            key={tab.id}
+                            header={tab.header}
+                            icon={<Icon type="search"/>}
+                        >
+                            {tab.render}
+                        </Tab>
+                    )}
+                </Sidebar>
+                <Map
+                    center={this.state.currentPosition}
+                    zoom={zoomLevel}
+                    style={{ height: '200px', ...this.props.style }}
+                    onClick={this.onClick}
+                    onContextMenu={this.onContextMenu}
+                    className="sidebar-map"
+                >
+                    <TileLayer
+                        attribution={stamenTonerAttr}
+                        url={tiles}
+                    />
+                    {this.props.markers && this.getMarkers()}
+                    {popup &&
+                        <Popup position={popup.position}>
+                            <div>
+                                <Button onClick={this.onAddPointClick}>Agregar punto de interés</Button>
+                            </div>
+                        </Popup>
+                    }
+                </Map>
+            </div>
         );
     }
 }

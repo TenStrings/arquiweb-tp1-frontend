@@ -101,6 +101,21 @@ class Home extends Component {
 
     const modalConfirmLoading = this.state.modal && this.state.modal.confirmLoading
 
+    const tabs = [
+      { id: "poiFilter",
+        render: (<>
+        <Card title="Nombre"><POIFilter onChange={this.OnNameFilterChange} poi={points} /></Card>
+        <Card title="Categoría">
+        <CategoryFilter
+                    key={categories}
+                    updateMapWith={this.OnCategoryFilterChange}
+                    categories={categories}
+                  />
+        </Card></>),
+        header: "Filtrar puntos"
+      },
+    ]
+
     return (
       <div className="App">
         <PointAddForm
@@ -111,44 +126,21 @@ class Home extends Component {
           confirmLoading={modalConfirmLoading}
           categories={categories}
         />
+        <Row id="Filtros"
+          type="flex"
+          gutter={16}
+        >
+        </Row>
         <Row id="Mapa">
           <Col>
             <MainMap
-              style={{ height: '600px' }}
+              style={{ height: '500px' }}
               markers={this.getFilteredMarkers()}
               onClick={this.onMapClick}
               showMyPosition={true}
               onNewPoint={this.onNewPoint}
+              tabs={tabs}
             />
-          </Col>
-        </Row>
-
-        <Row style={{ background: '#ECECEC' }}> <hr className="my-2" /> </Row>
-
-        <Row id="Filtros"
-          style={{ background: '#ECECEC', padding: '20px' }}
-          type="flex"
-        >
-          <Col offset={1}>
-            <Card
-              title="Match if name starts with..."
-              style={{ width: 300 }}
-            >
-              <POIFilter onChange={this.OnNameFilterChange} poi={points}></POIFilter>
-            </Card>
-          </Col>
-
-          <Col offset={1}>
-            <Card
-              title="Match if belongs to any of the listed categories."
-              style={{ width: 500 }}
-            >
-              <CategoryFilter
-                key={categories}
-                updateMapWith={this.OnCategoryFilterChange}
-                categories={categories}
-              />
-            </Card>
           </Col>
         </Row>
       </div>
