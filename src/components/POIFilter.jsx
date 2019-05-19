@@ -36,7 +36,6 @@ class POIFilter extends React.Component {
     render() {
         const { poi } = this.props
         const filteredPoints = this.filterPoints(poi)
-        console.log(filteredPoints)
         return (
             <div>
                 <AutoComplete

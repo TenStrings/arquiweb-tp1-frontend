@@ -76,8 +76,6 @@ class App extends Component {
   //<Route path='/backoffice_points' component={ContextBackofficePoints} />
   render() {
     const { points, categories } = this.state;
-    console.log("rendering app")
-    console.log(points)
     const visiblePoints = points.filter(point => point.visible)
     return (
       <UserProvider>
