@@ -38,6 +38,9 @@ export const poiAPI = {
     all: function () {
         return Promise.resolve(pointsMock)
     },
+    update: function (point) {
+        return axios.put(`http://localhost:4000/point/${point._id}`, point)
+    },
     show: function (pointId, token) {
         return new Promise(resolve => setTimeout(resolve, 1000))
     },

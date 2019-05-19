@@ -1,25 +1,26 @@
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import './App.css';
-import NavigationMenu from './components/NavigationMenu';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import BackofficePoints from './pages/BackofficePoints';
 import BackofficeCategories from './pages/BackofficeCategories';
 import BackofficeSugCategories from './pages/BackofficeSugCategories';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import NavigationMenu from './components/NavigationMenu';
+
 import { withUserContext } from './context/withUserContext';
 import UserProvider from './context/UserProvider';
 import { poiAPI, categoriesAPI } from './api';
 import axios from 'axios'
 
-
 const ContextLogin = withUserContext(Login)
 const AuthenticatedNavigationMenu = withUserContext(NavigationMenu)
-const ContextBackofficePoints = withUserContext(BackofficePoints)
+const ContextBackofficePoints = withUserContext(BackofficePoints) //para que neceista contexto el back? si ya sabemos que es admin
 
 //rest en nuestro caso es solo path= pero hay mas atributos
 //que se le pueden pasar a Route
-/*const FadingRoute = ({ component: Component, ...rest }) => (
+/*
+const FadingRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={props => (
     <FadeIn>
       <Component {...props}/>
@@ -60,9 +61,9 @@ class App extends Component {
   }
 
   onCategoryChange = () => {
-    //TODO: Hacer una especie de join?
+    //TO DO: Hacer una especie de join?
     this.loadCategoriesFromAPI()
-    //Porque si se ocultaron categorías podrían cambiar los puntos
+    //Porque si le cambias el nombre a la categoria le cambia el atr categorytName a todos sus puntos
     this.loadPointsFromAPI()
   }
 
@@ -75,24 +76,47 @@ class App extends Component {
   //<Route path='/backoffice_points' component={ContextBackofficePoints} />
   render() {
     const { points, categories } = this.state;
+    console.log("rendering app")
+    console.log(points)
     const visiblePoints = points.filter(point => point.visible)
     return (
       <UserProvider>
         <Router>
           <AuthenticatedNavigationMenu />
           <Switch>
-            {categories.length > 0 &&
-            <Route exact path='/' render={
-              props => (<Home {...props} points={visiblePoints} categories={categories} notifyPoiChange={this.onPointChange} />)
-            } />}
+
+            {points.length > 0 && categories.length > 0 &&
+            <Route exact path='/' render={props => (
+                <Home
+                  points={visiblePoints}
+                  categories={categories}
+                  notifyPointChange={this.onPointChange}
+                />
+            )}/>}
+
+            {points.length > 0 && categories.length > 0 &&
+            <Route path="/backoffice_points" render={ props => (
+                <ContextBackofficePoints
+                  points={points}
+                  categories={categories}
+                  notifyPointChange={this.onPointChange}
+                />
+            )}/>
+            }
+
+            <Route path='/backoffice_approved_categories' component={ props => (
+              <BackofficeCategories {...props}
+                categories={categories}
+                notifyCategoryChange={ this.onCategoryChange }
+              />
+            )}/>
+
+            <Route
+              path='/backoffice_suggested_categories'
+              component={BackofficeSugCategories}
+            />
+
             <Route path='/login' component={ContextLogin} />
-            <Route path="/backoffice_points" render={(props) => (
-              <ContextBackofficePoints {...props} key={points} notifyPointChanged={this.onPointChange} points={points} categories={categories} />)} />
-            <Route path='/backoffice_approved_categories' component={
-              props => <BackofficeCategories {...props}
-              categories={categories}
-              notifyCategoryChange={ this.onCategoryChange } />} />
-            <Route path='/backoffice_suggested_categories' component={BackofficeSugCategories} />
 
           </Switch>
         </Router>

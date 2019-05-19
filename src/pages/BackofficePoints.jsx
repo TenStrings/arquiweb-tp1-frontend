@@ -1,37 +1,39 @@
 import React, { Component } from 'react';
-import { Table, Button, Switch } from 'antd';
-import axios from 'axios';
+import { Table, Button, Switch, message } from 'antd';
 import { PointEditForm } from '../components/PointModal';
+import { poiAPI } from '../api';
+
 
 class BackofficePoints extends Component {
   state = { loading: {} }
 
-  updatePoint = (point) => axios.put('http://localhost:4000/point/' + point._id, point)
-    .then(_ => {
-      this.props.notifyPoiChange()
-    }).catch(() => console.log("BackofficePoints failed to update point"));
+  updatePoint(point) {
+    return poiAPI
+    .update(point)
+    .then(() => this.props.notifyPointChange())
+    .catch(() => console.log("BackofficePoints: failed to update point"));
+  }
 
   //**************** Visibility Switch ****************//
 
-  toggleLoading(pointId) {
+  toggleLoading(point) {
     this.setState(
       prevState => {
         const { loading } = prevState
         const newLoading = Object.assign({}, loading)
-        newLoading[pointId] = !loading[pointId]
+        newLoading[point._id] = !loading[point._id]
         return { loading: newLoading }
       }
     )
   }
 
-  onVisibilityChange = (checked, pointId) => {
+  onVisibilityChange = (checked, point) => {
     //const { userContext } = this.props
-    this.toggleLoading(pointId)
-    let pointToUpdate = this.props.points.find(point => point._id === pointId)
-    pointToUpdate.visible = !checked
-    this.updatePoint(pointToUpdate).then(
-      () => this.toggleLoading(pointToUpdate._id)
-    )
+    this.toggleLoading(point)
+    this.updatePoint({...point, visible: checked})
+      .finally(() => this.toggleLoading(point))
+      .then(() => message.success("El punto se actualizó correctamente"))
+      .catch(() => message.error("El punto no pudo actualizarse"))
   }
 
   //**************** Edit button *****************//
@@ -47,13 +49,13 @@ class BackofficePoints extends Component {
     this.formRef = formRef
   }
 
-  handleCancel = () => {
+  onEditCancel = () => {
     const form = this.formRef.props.form;
     form.resetFields()
     this.setState({ modal: null })
   }
 
-  handleConfirm = () => {
+  onEditConfirmation = () => {
     const form = this.formRef.props.form;
     form.validateFields((err, values) => {
       //TODO: Validar en serio xD
@@ -117,7 +119,7 @@ class BackofficePoints extends Component {
         img: "unBoton a img",
         cat: point.categoryName,
         visible: <Switch loading={loading[point._id]} defaultChecked={point.visible} onChange={checked =>
-          this.onVisibilityChange(checked, point._id)
+          this.onVisibilityChange(checked, point)
         } />,
         edit: <Button type="primary" shape="circle" icon="edit" onClick={
           () => this.showEditModal(point)
@@ -132,8 +134,8 @@ class BackofficePoints extends Component {
         <PointEditForm
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
-          onCancel={this.handleCancel}
-          onConfirm={this.handleConfirm}
+          onCancel={this.onEditCancel}
+          onConfirm={this.onEditConfirmation}
         />
       </React.Fragment>)
   }
