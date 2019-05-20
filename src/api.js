@@ -25,17 +25,6 @@ const pointsMock = [
 
 //return Promise.resolve(categoriesMock)
 const apiServer = "http://localhost:4000"
-export const categoriesAPI = {
-    all: function () {
-        return Promise.resolve(categoriesMock)
-    },
-    update: function (category, token) {
-        return axios.put(
-            `http://localhost:4000/category/${category._id}`,
-            category, { headers: { "Authorization": `Bearer ${token}` } }
-        )
-    },
-}
 
 export const poiAPI = {
     all: function () {
@@ -55,6 +44,30 @@ export const poiAPI = {
             point,
             { headers: { "Authorization": `Bearer ${token}` } }
         )
+    },
+    delete: function (point, token) {
+        return axios.delete(
+            `http://localhost:4000/point/${point._id}`,
+            point, { headers: { "Authorization": `Bearer ${token}` } }
+        )
+    }
+}
+
+export const categoriesAPI = {
+    all: function () {
+        return Promise.resolve(categoriesMock)
+    },
+    update: function (category, token) {
+        return axios.put(
+            `http://localhost:4000/category/${category._id}`,
+            category, { headers: { "Authorization": `Bearer ${token}` } }
+        )
+    },
+    delete: function (category, token) {
+        return axios.delete(
+            `http://localhost:4000/category/${category._id}`,
+            category, { headers: { "Authorization": `Bearer ${token}` } }
+        )
     }
 }
 
@@ -68,7 +81,7 @@ export const userAPI = {
         )
     },
 }
-
+/*
 const fakeUsers = [
     {
         username: "TomiPasto",
@@ -81,3 +94,4 @@ const fakeUsers = [
         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiYWRtaW4iOnRydWV9.2c7fRwMbZW_sJZxeggp-fBWbxYQNVzZxEvHrZwD-mKk"
     }
 ];
+*/

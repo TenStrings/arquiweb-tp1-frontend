@@ -14,6 +14,7 @@ class BackofficePoints extends Component {
     .catch(() => console.log("BackofficePoints: failed to update point"));
   }
 
+
   //**************** Visibility Switch ****************//
 
   toggleLoading(point) {
@@ -36,7 +37,7 @@ class BackofficePoints extends Component {
       .catch(() => message.error("El punto no pudo actualizarse"))
   }
 
-  //**************** Edit button *****************//
+//**************** Edit button *****************//
 
   showEditModal = point => {
     const form = this.formRef.props.form;
@@ -67,13 +68,34 @@ class BackofficePoints extends Component {
 
       //TODO: Probablemente esto debería ser una promise
       this.updatePoint(newPoint)
-
-      form.resetFields();
-      this.setState({ modal: null });
+      .then(() => {
+        form.resetFields()
+        this.setState({ modal: null })
+        message.success("La categoría se actualizó correctamente")}
+      )
+      .catch(() => {
+        form.resetFields()
+        this.setState({ modal: null })
+        message.error("La categoría no pudo actualizarse")
+      })
     });
   }
 
-  //**********************************************//
+//**************** Delete button *****************//
+  deletePoint(point){
+    return poiAPI
+    .delete(point, this.props.userContext.token)
+    .then(() => this.props.notifyPointChange())
+    .catch(() => console.log("BackofficePoints: failed to delete point"));
+  }
+
+  onDelete = point => {
+    this.deletePoint(point)
+    .then(() => message.success("El punto se eliminó correctamente"))
+    .catch(() => message.error("El punto no pudo eliminarse"))
+  }
+
+//**********************************************//
 
   render() {
     const columns = [
@@ -118,13 +140,15 @@ class BackofficePoints extends Component {
         description: point.description,
         img: "unBoton a img",
         cat: point.categoryName,
-        visible: <Switch loading={loading[point._id]} defaultChecked={point.visible} onChange={checked =>
-          this.onVisibilityChange(checked, point)
-        } />,
-        edit: <Button type="primary" shape="circle" icon="edit" onClick={
-          () => this.showEditModal(point)
-        }></Button>,
-        delete: <Button type="danger" shape="circle" icon="delete"></Button>
+        visible: <Switch loading={loading[point._id]} defaultChecked={point.visible}
+                         onChange={checked => this.onVisibilityChange(checked, point)}
+                 />,
+        edit: <Button type="primary" shape="circle" icon="edit"
+                      onClick={ () => this.showEditModal(point)}
+              />,
+        delete: <Button type="danger" shape="circle" icon="delete"
+                        onClick={ () => this.onDelete(point)}
+                />
       })
     )
 

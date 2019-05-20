@@ -16,6 +16,7 @@ import axios from 'axios'
 const ContextLogin = withUserContext(Login)
 const AuthenticatedNavigationMenu = withUserContext(NavigationMenu)
 const ContextBackofficePoints = withUserContext(BackofficePoints) //para que neceista contexto el back? si ya sabemos que es admin
+const ContextBackofficeCategories = withUserContext(BackofficeCategories) //para que neceista contexto el back? si ya sabemos que es admin
 
 //rest en nuestro caso es solo path= pero hay mas atributos
 //que se le pueden pasar a Route
@@ -76,21 +77,22 @@ class App extends Component {
   //<Route path='/backoffice_points' component={ContextBackofficePoints} />
   render() {
     const { points, categories } = this.state;
-    const visiblePoints = points.filter(point => point.visible)
+    const visiblePoints = points.filter(p => p.visible)
+    const visibleCategories = categories.filter(c => c.visible)
+
     return (
       <UserProvider>
         <Router>
           <AuthenticatedNavigationMenu />
           <Switch>
 
-            {points.length > 0 && categories.length > 0 &&
             <Route exact path='/' render={props => (
                 <Home
                   points={visiblePoints}
-                  categories={categories}
+                  categories={visibleCategories}
                   notifyPointChange={this.onPointChange}
                 />
-            )}/>}
+            )}/>
 
             {points.length > 0 && categories.length > 0 &&
             <Route path="/backoffice_points" render={ props => (
@@ -103,10 +105,10 @@ class App extends Component {
             }
 
             <Route path='/backoffice_approved_categories' component={ props => (
-              <BackofficeCategories {...props}
-                categories={categories}
-                notifyCategoryChange={ this.onCategoryChange }
-              />
+                <ContextBackofficeCategories
+                  categories={categories}
+                  notifyCategoryChange={ this.onCategoryChange }
+                />
             )}/>
 
             <Route

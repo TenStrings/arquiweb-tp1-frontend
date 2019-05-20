@@ -96,14 +96,15 @@ class MainMap extends Component {
         return (
             <div>
                 <Sidebar
-                id="sidebar"
-                collapsed={this.state.collapsed}
-                selected={this.state.selected}
-                closeIcon={<Icon type="left"/>}
-                onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}>
-                    {this.props.tabs.map(tab => 
+                  id="sidebar"
+                  collapsed={this.state.collapsed}
+                  selected={this.state.selected}
+                  closeIcon={<Icon type="left"/>}
+                  onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}
+                >
+                    {this.props.tabs.map(tab =>
                         <Tab
-                            id={tab.id} 
+                            id={tab.id}
                             key={tab.id}
                             header={tab.header}
                             icon={<Icon type="search"/>}

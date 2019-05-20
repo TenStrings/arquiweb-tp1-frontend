@@ -104,14 +104,20 @@ class Home extends Component {
     const tabs = [
       { id: "poiFilter",
         render: (<>
-        <Card title="Nombre"><POIFilter onChange={this.OnNameFilterChange} poi={points} /></Card>
+        <Card title="Nombre">
+            <POIFilter
+              onChange={this.OnNameFilterChange}
+              poi={points}
+            />
+        </Card>
         <Card title="Categoría">
-        <CategoryFilter
-                    key={categories}
-                    updateMapWith={this.OnCategoryFilterChange}
-                    categories={categories}
-                  />
-        </Card></>),
+            <CategoryFilter
+              key={categories}
+              updateMapWith={this.OnCategoryFilterChange}
+              categories={categories}
+            />
+        </Card>
+        </>),
         header: "Filtrar puntos"
       },
     ]
@@ -126,11 +132,6 @@ class Home extends Component {
           confirmLoading={modalConfirmLoading}
           categories={categories}
         />
-        <Row id="Filtros"
-          type="flex"
-          gutter={16}
-        >
-        </Row>
         <Row id="Mapa">
           <Col>
             <MainMap

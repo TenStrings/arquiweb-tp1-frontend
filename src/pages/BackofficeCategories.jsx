@@ -6,6 +6,15 @@ import { categoriesAPI } from '../api';
 class BackofficeCategories extends Component {
   state = { loading: {} }
 
+  updateCategory(category) {
+    const { notifyCategoryChange } = this.props
+    return categoriesAPI
+      .update(category)
+      .then(() => notifyCategoryChange())
+  }
+
+//**************** Visibility Switch ****************//
+
   toggleLoading(category) {
     this.setState(
       prevState => {
@@ -17,13 +26,6 @@ class BackofficeCategories extends Component {
     )
   }
 
-  updateCategory(category) {
-    const { notifyCategoryChange } = this.props
-    return categoriesAPI
-      .update(category)
-      .then(() => notifyCategoryChange())
-  }
-
   onVisibilityChange = (checked, category) => {
     this.toggleLoading(category)
     this.updateCategory({ ...category, visible: checked })
@@ -31,6 +33,8 @@ class BackofficeCategories extends Component {
       .then(() => message.success("La categoría se actualizó correctamente"))
       .catch(() => message.error("La categoría no pudo actualizarse"))
   }
+
+//**************** Edit button ****************//
 
   showEditModal = category => {
     const form = this.formRef.props.form;
@@ -48,13 +52,13 @@ class BackofficeCategories extends Component {
     this.formRef = formRef
   }
 
-  handleCancel = () => {
+  onEditCancel = () => {
     const form = this.formRef.props.form;
     form.resetFields()
     this.setState({ modal: null })
   }
 
-  handleConfirm = () => {
+  onEditConfirmation = () => {
     const form = this.formRef.props.form;
 
     this.setState(
@@ -85,6 +89,22 @@ class BackofficeCategories extends Component {
       }
     )
   }
+
+//**************** Delete button *****************//
+  deleteCategory(category){
+    return categoriesAPI
+    .delete(category, this.props.userContext.token)
+    .then(() => this.props.notifyCategoryChange())
+    .catch(() => console.log("BackofficeCategory: failed to delete category"));
+  }
+
+  onDelete = category => {
+    this.deleteCategory(category)
+    .then(() => message.success("La categoría se eliminó correctamente"))
+    .catch(() => message.error("La categoría no pudo eliminarse"))
+  }
+
+//**************************************************//
 
   render() {
     const columns = [
@@ -119,10 +139,12 @@ class BackofficeCategories extends Component {
             onChange={
               checked => this.onVisibilityChange(checked, category)}
           />,
-        edit: <Button type="primary" shape="circle" icon="edit" onClick={
-          () => this.showEditModal(category)
-        }></Button>,
-        delete: <Button type="danger" shape="circle" icon="delete"></Button>
+        edit: <Button type="primary" shape="circle" icon="edit"
+                      onClick={() => this.showEditModal(category)}
+              />,
+        delete: <Button type="danger" shape="circle" icon="delete"
+                        onClick={() => this.onDelete(category)}
+                />
       })
     )
 
@@ -133,8 +155,8 @@ class BackofficeCategories extends Component {
         <CategoryEditForm
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
-          onCancel={this.handleCancel}
-          onConfirm={this.handleConfirm}
+          onCancel={this.onEditCancel}
+          onConfirm={this.onEditConfirmation}
           confirmLoading={modalConfirmLoading}
         />
       </React.Fragment>)
