@@ -94,7 +94,7 @@ class MainMap extends Component {
     render() {
         const { popup } = this.state;
         return (
-            <div>
+            <div >
                 <Sidebar
                   id="sidebar"
                   collapsed={this.state.collapsed}
@@ -116,7 +116,7 @@ class MainMap extends Component {
                 <Map
                     center={this.state.currentPosition}
                     zoom={zoomLevel}
-                    style={{ height: '200px', ...this.props.style }}
+                    style={{ height: '900px', ...this.props.style }}
                     onClick={this.onClick}
                     onContextMenu={this.onContextMenu}
                     className="sidebar-map"

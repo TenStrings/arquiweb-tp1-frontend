@@ -2,9 +2,6 @@ import React from 'react';
 import { Tag } from 'antd';
 
 const CheckableTag = Tag.CheckableTag;
-//const tag_colors = ["magenta", "red", "volcano", "orange", "gold", "lime",
-//                    "green", "cyan", "blue", "geekblue", "purple"]
-
 
 class CategoryFilter extends React.Component {
     state = {
@@ -45,7 +42,7 @@ class CategoryFilter extends React.Component {
                                 checked)}
                         >
                             {category.title}
-                        </CheckableTag>
+                        </CheckableTag >
                     ))
                 }
             </div>

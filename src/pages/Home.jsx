@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, message } from 'antd';
+import { Row, Col, Card, message, Divider } from 'antd';
 
 import MainMap from '../components/MainMap';
 import POIFilter from '../components/POIFilter'
@@ -71,11 +71,11 @@ class Home extends Component {
       const promise = poiAPI.add(newPoint)
       promise
         .then(_ => {
-          message.success("Punto agregado correctamente")
+          message.success("Marcador agregado correctamente")
           form.resetFields()
           this.setState({ modal: null }, this.props.notifyPointChange)
         }).catch(e => {
-          message.error("No pudo insertarse el nuevo punto")
+          message.error("No pudo insertarse el nuevo marcador")
           console.log(e)
         })
 
@@ -97,24 +97,48 @@ class Home extends Component {
 
     const modalConfirmLoading = this.state.modal && this.state.modal.confirmLoading
 
+    const card_header_style = {backgroundColor: 'royalblue', color:'white'}
+    const card_style = {
+        backgroundColor: 'lightyellow',
+        border: '1px solid black',
+        borderRadius: '6px',
+        borderColor:'black',
+        color:'#000000',
+    }
     const tabs = [
       { id: "poiFilter",
-        render: (<>
-        <Card title="Nombre">
+
+        render: (<div>
+        <br/>
+        <Card
+          style={card_style}
+          title="Nombre"
+          headStyle= {card_header_style}
+          bordered
+          hoverable
+        >
             <POIFilter
               onChange={this.OnNameFilterChange}
               poi={points}
             />
         </Card>
-        <Card title="Categoría">
+        <Divider />
+        <Card
+          title="Categoría"
+          style={card_style}
+          headStyle= {card_header_style}
+          bordered
+          hoverable
+        >
             <CategoryFilter
               key={categories}
               updateMapWith={this.OnCategoryFilterChange}
               categories={categories}
             />
         </Card>
-        </>),
-        header: "Filtrar puntos"
+        <Divider />
+        </div>),
+        header: "Filtrar marcadores"
       },
     ]
 
@@ -131,7 +155,6 @@ class Home extends Component {
         <Row id="Mapa">
           <Col>
             <MainMap
-              style={{ height: '500px' }}
               markers={this.getFilteredMarkers()}
               onClick={this.onMapClick}
               showMyPosition={true}
@@ -145,46 +168,5 @@ class Home extends Component {
 
   }
 }
-
-/*
-  handleCategorySubmit  = event => {
-    event.preventDefault();
-    const name = event.target[0].value
-    this.setState(state => {
-      let {categories} = state
-      return { categories: [ ...categories, {title: name , icon: "idk4" }] }
-    });
-  }
-
-  handlePointSubmit = (event) => {
-    event.preventDefault();
-    const name = event.target[0].value
-    const lat = event.target[1].value
-    const long = event.target[2].value
-    alert(name)
-
-    this.setState(state => {
-      let {points} = state
-      let {currentPointId} = state
-      return { points: [ ...points, {name: name , position: { lat: lat, lng: long}, id: currentPointId + 1 }], currentPointId: currentPointId + 1 }
-    });
-  }
-*/
-/*
-<Footer>
-    <form onSubmit={this.handleCategorySubmit}>
-      <input type="text" name="categoryName" placeholder="Category name" />
-      <input type="submit" value="Add category" />
-    </form>
-
-    <form onSubmit={this.handlePointSubmit}>
-      <input type="text" name="name" placeholder="Point name" />
-      <input type="number" name="name" placeholder="latitude" />
-      <input type="number" name="name" placeholder="longitude" />
-      <input type="submit" value="Add Point" />
-    </form>
-</Footer>
-
-*/
 
 export default Home
