@@ -24,30 +24,27 @@ const pointsMock = [
 ]
 
 //return Promise.resolve(categoriesMock)
-const apiServer = "http://localhost:4000"
+//const apiServer = "http://localhost:4000"
+
+const apiServer = process.env.REACT_APP_API_SERVER ?
+    process.env.REACT_APP_API_SERVER : "http://localhost:4000"
 
 export const poiAPI = {
     all: function () {
-        return Promise.resolve(pointsMock)
-    },
-    show: function (pointId, token) {
-        return new Promise(resolve => setTimeout(resolve, 1000))
-    },
-    hide: function (pointId, token) {
-        return new Promise(resolve => setTimeout(resolve, 1000))
+        return axios.get(`${apiServer}/point`)
     },
     add: function (point) {
         return axios.post(`${apiServer}/point`, point);
     },
     update: function (point, token) {
-        return axios.put('http://localhost:4000/point/' + point._id,
+        return axios.put(`${apiServer}/point/${point._id}`,
             point,
             { headers: { "Authorization": `Bearer ${token}` } }
         )
     },
     delete: function (point, token) {
         return axios.delete(
-            `http://localhost:4000/point/${point._id}`,
+            `${apiServer}/point/${point._id}`,
             point, { headers: { "Authorization": `Bearer ${token}` } }
         )
     }
@@ -55,17 +52,17 @@ export const poiAPI = {
 
 export const categoriesAPI = {
     all: function () {
-        return Promise.resolve(categoriesMock)
+        return axios.get(`${apiServer}/category`)
     },
     update: function (category, token) {
         return axios.put(
-            `http://localhost:4000/category/${category._id}`,
+            `${apiServer}/category/${category._id}`,
             category, { headers: { "Authorization": `Bearer ${token}` } }
         )
     },
     delete: function (category, token) {
         return axios.delete(
-            `http://localhost:4000/category/${category._id}`,
+            `${apiServer}/category/${category._id}`,
             category, { headers: { "Authorization": `Bearer ${token}` } }
         )
     }
@@ -73,7 +70,7 @@ export const categoriesAPI = {
 
 export const userAPI = {
     authenticate: function (username, password) {
-        return axios.post(`http://localhost:4000/auth/login`, {
+        return axios.post(`${apiServer}/auth/login`, {
             username: username,
             password: password
         }).then(

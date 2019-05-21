@@ -44,13 +44,13 @@ class App extends Component {
 
   }
 
-  loadPointsFromAPI = () => axios.get('http://localhost:4000/point')
+  loadPointsFromAPI = () => poiAPI.all()
     .then(res => {
       //console.log(res.data);
       this.setState({ points: res.data });
     });
 
-  loadCategoriesFromAPI = () => axios.get('http://localhost:4000/category')
+  loadCategoriesFromAPI = () => categoriesAPI.all()
     .then(res => {
       //console.log(res.data);pointId
       this.setState({ categories: res.data });
@@ -87,29 +87,29 @@ class App extends Component {
           <Switch>
 
             <Route exact path='/' render={props => (
-                <Home
-                  points={visiblePoints}
-                  categories={visibleCategories}
-                  notifyPointChange={this.onPointChange}
-                />
-            )}/>
+              <Home
+                points={visiblePoints}
+                categories={visibleCategories}
+                notifyPointChange={this.onPointChange}
+              />
+            )} />
 
             {points.length > 0 && categories.length > 0 &&
-            <Route path="/backoffice_points" render={ props => (
+              <Route path="/backoffice_points" render={props => (
                 <ContextBackofficePoints
                   points={points}
                   categories={categories}
                   notifyPointChange={this.onPointChange}
                 />
-            )}/>
+              )} />
             }
 
-            <Route path='/backoffice_approved_categories' component={ props => (
-                <ContextBackofficeCategories
-                  categories={categories}
-                  notifyCategoryChange={ this.onCategoryChange }
-                />
-            )}/>
+            <Route path='/backoffice_approved_categories' component={props => (
+              <ContextBackofficeCategories
+                categories={categories}
+                notifyCategoryChange={this.onCategoryChange}
+              />
+            )} />
 
             <Route
               path='/backoffice_suggested_categories'
