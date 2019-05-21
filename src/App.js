@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {withRouter} from 'react-router-dom'
 import './App.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import SignUp from './pages/SignUp';
 import BackofficePoints from './pages/BackofficePoints';
 import BackofficeCategories from './pages/BackofficeCategories';
 import BackofficeSugCategories from './pages/BackofficeSugCategories';
@@ -12,8 +14,9 @@ import { withUserContext } from './context/withUserContext';
 import UserProvider from './context/UserProvider';
 import { poiAPI, categoriesAPI, suggestionsAPI } from './api';
 
-const ContextLogin = withUserContext(Login)
-const AuthenticatedNavigationMenu = withUserContext(NavigationMenu)
+const ContextLogin = withUserContext(withRouter(Login))
+const ContextSignUp = withUserContext(SignUp)
+const AuthenticatedNavigationMenu = withRouter(withUserContext(NavigationMenu))
 const ContextBackofficePoints = withUserContext(BackofficePoints)
 const ContextBackofficeCategories = withUserContext(BackofficeCategories)
 const ContextBackofficeSuggestions = withUserContext(BackofficeSugCategories)
@@ -35,7 +38,8 @@ class App extends Component {
     loginModalShow: false,
     points: [],
     categories: [],
-    suggestions: []
+    suggestions: [],
+    mocked_logedin: false
   }
 
   componentDidMount() {
@@ -81,7 +85,9 @@ class App extends Component {
     if (was_accepted) this.loadCategoriesFromAPI()
   }
 
-  //<Route path='/backoffice_points' component={ContextBackofficePoints} />
+  onLogIn = () => this.setState({mocked_logedin:true})
+  onLogOut = () => this.setState({mocked_logedin:false})
+
   render() {
     const { points, categories, suggestions } = this.state;
     const visiblePoints = points.filter(p => p.visible)
@@ -90,7 +96,8 @@ class App extends Component {
     return (
       <UserProvider>
         <Router>
-          <AuthenticatedNavigationMenu categories={categories} notifyNewSuggestion={this.onNewSuggestion}/>
+          <AuthenticatedNavigationMenu mockedUser={this.state.mocked_logedin} notifyLogOut={this.onLogOut}
+                                       categories={categories} notifyNewSuggestion={this.onNewSuggestion}/>
           <Switch>
 
             <Route exact path='/' render={props => (
@@ -123,7 +130,8 @@ class App extends Component {
                 />
             )}/>
 
-            <Route path='/login' component={ContextLogin} />
+            <Route path='/login' render={props => <ContextLogin notifyLogIn={this.onLogIn}/> } />
+            <Route path='/register' component={ContextSignUp} />
 
           </Switch>
         </Router>
