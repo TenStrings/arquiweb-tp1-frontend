@@ -131,12 +131,12 @@ class NavigationMenu extends Component {
                   Mapa
                 </Link>
               </Menu.Item>
-
+              {(user || this.props.mockedUser) &&
               <Menu.Item key="suggest_category">
                   <Icon type="tags" />
                   Sugerir categoría
               </Menu.Item>
-
+              }
               {user && user.admin &&
               <SubMenu title={<span><Icon type="setting" />Backoffice</span>}>
                   <Menu.Item key="backoffice_points">

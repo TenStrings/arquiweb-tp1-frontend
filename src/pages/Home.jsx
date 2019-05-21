@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col, Card, message, Divider } from 'antd';
+import { Row, Col, Card, message, Divider, Avatar } from 'antd';
 
 import MainMap from '../components/MainMap';
 import POIFilter from '../components/POIFilter'
@@ -9,10 +9,11 @@ import { PointAddForm } from '../components/PointModal';
 
 import { poiAPI } from '../api';
 
+const {Meta} = Card;
+
 class Home extends Component {
   NoFilter = function (points) { return points }
 
-  //TODO FilterProvider component to tidy up
   state = {
     nameFilter: this.NoFilter,
     categoryFilter: this.NoFilter,
@@ -24,7 +25,24 @@ class Home extends Component {
     const filteredPoints = nameFilter(categoryFilter(points))
     return filteredPoints.map(point => ({
       position: point.position,
-      popUpContent: (<div> Name: {point.name} <br /> Description: {point.description}</div>),
+      popUpContent: (<div>
+                     <Card
+                       style={{ width: 300 }}
+                       cover={
+                         <img
+                           alt="Loading"
+                           src={"http://localhost:4000/static/pointImages/" + point.image}
+                         />
+                       }
+                     >
+                       <Meta
+                         avatar={<Avatar src= {"http://localhost:4000/static/pointImages/" + point.image} />}
+                         title={point.name}
+                         description={point.description}
+                       />
+                     </Card>
+
+                     </div>),
       key: point.name,
     }))
   }
