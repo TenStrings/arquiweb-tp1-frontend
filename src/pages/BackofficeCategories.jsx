@@ -144,7 +144,7 @@ class BackofficeCategories extends Component {
         key: category._id,
         name: category.title,
         img: <Avatar
-        src= {"http://localhost:4000/static/icons/" + "FoodMarkets"} />,
+        src= {"http://localhost:4000/static/icons/" + category.title} />,
         visible:
           <Switch
             loading={loading[category._id]}
