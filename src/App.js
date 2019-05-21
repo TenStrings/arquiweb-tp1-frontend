@@ -118,8 +118,9 @@ class App extends Component {
 
             <Route path='/backoffice_approved_categories' render={ props => (
                 <ContextBackofficeCategories
+                  key={categories}
                   categories={categories}
-                  notifyCategoryChange={ this.onCategoryChange }
+                  notifyCategoryChange={this.onCategoryChange}
                 />
             )}/>
 

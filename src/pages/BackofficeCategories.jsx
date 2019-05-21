@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Button, Switch, message } from 'antd';
 import { CategoryEditForm } from '../components/CategoryModal';
-import { Demo } from '../components/EditCategory';
 import { categoriesAPI } from '../api';
 import { Avatar } from 'antd';
 
@@ -80,21 +79,19 @@ class BackofficeCategories extends Component {
           }
 
           const oldCategory = this.state.modal.category
-
-          console.log("values")
-          console.log(values)
-
           const newCategory = { ...oldCategory, ...values }
 
           this.updateCategory(newCategory)
             .then(() => {
               form.resetFields()
               this.setState({ modal: null })
+              form.resetFields()
               message.success("La categoría se actualizó correctamente")}
             )
             .catch(() => {
               form.resetFields()
               this.setState({ modal: null })
+              form.resetFields()
               message.error("La categoría no pudo actualizarse")
             })
         });
@@ -138,13 +135,12 @@ class BackofficeCategories extends Component {
     ];
     const { loading } = this.state;
     const { categories } = this.props;
-
     const data = categories.map(
       category => ({
         key: category._id,
         name: category.title,
         img: <Avatar
-        src= {"http://localhost:4000/static/icons/" + category.title} />,
+        src= {"http://localhost:4000/static/icons/" + category.icon} />,
         visible:
           <Switch
             loading={loading[category._id]}

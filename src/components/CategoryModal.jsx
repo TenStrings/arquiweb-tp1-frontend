@@ -4,15 +4,13 @@ import React from 'react';
 export const CategoryEditForm = Form.create({ name: 'edit_category_in_modal' })(
   class extends React.Component {
 
-
-
     render() {
       const { visible, onCancel, onConfirm, form, confirmLoading } = this.props;
       const { getFieldDecorator } = form;
       return (
         <Modal
           visible={visible}
-          title="Editar punto"
+          title="Editar categoría"
           okText="Confirmar"
           onCancel={onCancel}
           onOk={onConfirm}
@@ -25,13 +23,13 @@ export const CategoryEditForm = Form.create({ name: 'edit_category_in_modal' })(
               })(<Input/>)}
               </Form.Item>
 
-              <Form.Item label="Image">
+              <Form.Item label="Ícono">
                {getFieldDecorator('icon', {
                  rules: [{ required: true, message: 'Por favor ingrese un ícono de categoría'}],
                })(
                <Upload beforeUpload={file => false}>
                  <Button>
-                   <Icon type="upload" /> Click to Upload
+                   <Icon type="upload" /> Subir imagen
                  </Button>
                </Upload>
                  )}
