@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Table, Button, Switch, message } from 'antd';
 import { CategoryEditForm } from '../components/CategoryModal';
+import { Demo } from '../components/EditCategory';
 import { categoriesAPI } from '../api';
+import { Avatar } from 'antd';
 
 class BackofficeCategories extends Component {
   state = { loading: {} }
@@ -10,6 +12,13 @@ class BackofficeCategories extends Component {
     const { notifyCategoryChange } = this.props
     return categoriesAPI
       .update(category)
+      .then(() => notifyCategoryChange())
+  }
+
+  updateCategoryVisibility(category) {
+    const { notifyCategoryChange } = this.props
+    return categoriesAPI
+      .updateVisibility(category)
       .then(() => notifyCategoryChange())
   }
 
@@ -28,7 +37,7 @@ class BackofficeCategories extends Component {
 
   onVisibilityChange = (checked, category) => {
     this.toggleLoading(category)
-    this.updateCategory({ ...category, visible: checked })
+    this.updateCategoryVisibility({ ...category, visible: checked })
       .finally(() => this.toggleLoading(category))
       .then(() => message.success("La categoría se actualizó correctamente"))
       .catch(() => message.error("La categoría no pudo actualizarse"))
@@ -71,6 +80,9 @@ class BackofficeCategories extends Component {
           }
 
           const oldCategory = this.state.modal.category
+
+          console.log("values")
+          console.log(values)
 
           const newCategory = { ...oldCategory, ...values }
 
@@ -131,7 +143,8 @@ class BackofficeCategories extends Component {
       category => ({
         key: category._id,
         name: category.title,
-        img: "unBoton a img",
+        img: <Avatar
+        src= {"http://localhost:4000/static/icons/" + "FoodMarkets"} />,
         visible:
           <Switch
             loading={loading[category._id]}
@@ -160,6 +173,7 @@ class BackofficeCategories extends Component {
           confirmLoading={modalConfirmLoading}
         />
       </React.Fragment>)
+
   }
 }
 
