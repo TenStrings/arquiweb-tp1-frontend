@@ -10,13 +10,13 @@ import NavigationMenu from './components/NavigationMenu';
 
 import { withUserContext } from './context/withUserContext';
 import UserProvider from './context/UserProvider';
-import { poiAPI, categoriesAPI } from './api';
-import axios from 'axios'
+import { poiAPI, categoriesAPI, suggestionsAPI } from './api';
 
 const ContextLogin = withUserContext(Login)
 const AuthenticatedNavigationMenu = withUserContext(NavigationMenu)
-const ContextBackofficePoints = withUserContext(BackofficePoints) //para que neceista contexto el back? si ya sabemos que es admin
-const ContextBackofficeCategories = withUserContext(BackofficeCategories) //para que neceista contexto el back? si ya sabemos que es admin
+const ContextBackofficePoints = withUserContext(BackofficePoints)
+const ContextBackofficeCategories = withUserContext(BackofficeCategories)
+const ContextBackofficeSuggestions = withUserContext(BackofficeSugCategories)
 
 //rest en nuestro caso es solo path= pero hay mas atributos
 //que se le pueden pasar a Route
@@ -34,56 +34,63 @@ class App extends Component {
   state = {
     loginModalShow: false,
     points: [],
-    categories: []
+    categories: [],
+    suggestions: []
   }
 
   componentDidMount() {
-
     this.loadPointsFromAPI()
     this.loadCategoriesFromAPI()
-
+    this.loadSuggestionsFromAPI()
   }
 
-  loadPointsFromAPI = () => axios.get('http://localhost:4000/point')
+  loadPointsFromAPI = () => {
+    poiAPI.get()
     .then(res => {
-      //console.log(res.data);
       this.setState({ points: res.data });
     });
+  }
 
-  loadCategoriesFromAPI = () => axios.get('http://localhost:4000/category')
+  loadCategoriesFromAPI = () => {
+    categoriesAPI.get()
     .then(res => {
-      //console.log(res.data);pointId
       this.setState({ categories: res.data });
-    });
+    })
+  }
+
+  loadSuggestionsFromAPI = () => {
+    suggestionsAPI.get()
+    .then(res => {
+      this.setState({ suggestions: res.data });
+    })
+  }
 
   onPointChange = () => {
-    console.log("OnPointChange")
     this.loadPointsFromAPI()
   }
 
   onCategoryChange = () => {
-    //TO DO: Hacer una especie de join?
     this.loadCategoriesFromAPI()
-    //Porque si le cambias el nombre a la categoria le cambia el atr categorytName a todos sus puntos
     this.loadPointsFromAPI()
   }
-
-  getPoints = () => poiAPI.all().then(points => this.setState({ points: points }))
-
-  getCategories = () => categoriesAPI.all().then(
-    categories => this.setState({ categories: categories })
-  )
+  onNewSuggestion = () => {
+    this.loadSuggestionsFromAPI()
+  }
+  onSuggestionSolved = was_accepted => {
+    this.loadSuggestionsFromAPI()
+    if (was_accepted) this.loadCategoriesFromAPI()
+  }
 
   //<Route path='/backoffice_points' component={ContextBackofficePoints} />
   render() {
-    const { points, categories } = this.state;
+    const { points, categories, suggestions } = this.state;
     const visiblePoints = points.filter(p => p.visible)
     const visibleCategories = categories.filter(c => c.visible)
 
     return (
       <UserProvider>
         <Router>
-          <AuthenticatedNavigationMenu />
+          <AuthenticatedNavigationMenu categories={categories} notifyNewSuggestion={this.onNewSuggestion}/>
           <Switch>
 
             <Route exact path='/' render={props => (
@@ -94,7 +101,7 @@ class App extends Component {
                 />
             )}/>
 
-            {points.length > 0 && categories.length > 0 &&
+            {
             <Route path="/backoffice_points" render={ props => (
                 <ContextBackofficePoints
                   points={points}
@@ -104,17 +111,19 @@ class App extends Component {
             )}/>
             }
 
-            <Route path='/backoffice_approved_categories' component={ props => (
+            <Route path='/backoffice_approved_categories' render={ props => (
                 <ContextBackofficeCategories
                   categories={categories}
                   notifyCategoryChange={ this.onCategoryChange }
                 />
             )}/>
 
-            <Route
-              path='/backoffice_suggested_categories'
-              component={BackofficeSugCategories}
-            />
+            <Route path='/backoffice_suggested_categories' render={ props => (
+                <ContextBackofficeSuggestions
+                  suggestions={suggestions}
+                  notifySuggestionSolved={ this.onSuggestionSolved }
+                />
+            )}/>
 
             <Route path='/login' component={ContextLogin} />
 

@@ -1,5 +1,88 @@
 import axios from 'axios';
 
+const apiServer = "http://localhost:4000"
+
+export const poiAPI = {
+    get: function () {
+        return axios.get(`${apiServer}/point`);
+    },
+    add: function (point) {
+        return axios.post(`${apiServer}/point`, point);
+    },
+    update: function (point, token) {
+        return axios.put(
+            `${apiServer}/point/${point._id}`,
+            point,
+            { headers: { "Authorization": `Bearer ${token}` } }
+        )
+    },
+    delete: function (point, token) {
+        return axios.delete(
+          `${apiServer}/point/${point._id}`,
+            point,
+            { headers: { "Authorization": `Bearer ${token}` } }
+        )
+    }
+}
+
+export const categoriesAPI = {
+    get: function () {
+      return axios.get(`${apiServer}/category`);
+    },
+    add: function (category, token) {
+      return axios.post(
+        `${apiServer}/category`,
+        category,
+        { headers: { "Authorization": `Bearer ${token}` } }
+      );
+    },
+    update: function (category, token) {
+        return axios.put(
+            `${apiServer}/category/${category._id}`,
+            category,
+            { headers: { "Authorization": `Bearer ${token}` } }
+        )
+    },
+    delete: function (category, token) {
+        return axios.delete(
+            `${apiServer}/category/${category._id}`,
+            category,
+            { headers: { "Authorization": `Bearer ${token}` } }
+        )
+    }
+}
+
+export const suggestionsAPI = {
+    get: function () {
+      return axios.get(`${apiServer}/suggested_category`);
+    },
+    add: function (suggestion) {
+        return axios.post(
+          `${apiServer}/suggested_category`,
+           suggestion
+         );
+    },
+    delete: function (suggestion, token) {
+        return axios.delete(
+            `${apiServer}/suggested_category/${suggestion._id}`,
+            suggestion,
+            { headers: { "Authorization": `Bearer ${token}` } }
+        )
+    }
+}
+
+export const userAPI = {
+    authenticate: function (username, password) {
+        return axios.post(`http://localhost:4000/auth/login`, {
+            username: username,
+            password: password
+        }).then(
+            response => response["data"]["access_token"]
+        )
+    },
+}
+/*
+
 const categoriesMock = [
     { title: "Food", icon: "idk1" },
     { title: "Night Life", icon: "idk2" },
@@ -23,65 +106,6 @@ const pointsMock = [
     }
 ]
 
-//return Promise.resolve(categoriesMock)
-const apiServer = "http://localhost:4000"
-
-export const poiAPI = {
-    all: function () {
-        return Promise.resolve(pointsMock)
-    },
-    show: function (pointId, token) {
-        return new Promise(resolve => setTimeout(resolve, 1000))
-    },
-    hide: function (pointId, token) {
-        return new Promise(resolve => setTimeout(resolve, 1000))
-    },
-    add: function (point) {
-        return axios.post(`${apiServer}/point`, point);
-    },
-    update: function (point, token) {
-        return axios.put('http://localhost:4000/point/' + point._id,
-            point,
-            { headers: { "Authorization": `Bearer ${token}` } }
-        )
-    },
-    delete: function (point, token) {
-        return axios.delete(
-            `http://localhost:4000/point/${point._id}`,
-            point, { headers: { "Authorization": `Bearer ${token}` } }
-        )
-    }
-}
-
-export const categoriesAPI = {
-    all: function () {
-        return Promise.resolve(categoriesMock)
-    },
-    update: function (category, token) {
-        return axios.put(
-            `http://localhost:4000/category/${category._id}`,
-            category, { headers: { "Authorization": `Bearer ${token}` } }
-        )
-    },
-    delete: function (category, token) {
-        return axios.delete(
-            `http://localhost:4000/category/${category._id}`,
-            category, { headers: { "Authorization": `Bearer ${token}` } }
-        )
-    }
-}
-
-export const userAPI = {
-    authenticate: function (username, password) {
-        return axios.post(`http://localhost:4000/auth/login`, {
-            username: username,
-            password: password
-        }).then(
-            response => response["data"]["access_token"]
-        )
-    },
-}
-/*
 const fakeUsers = [
     {
         username: "TomiPasto",

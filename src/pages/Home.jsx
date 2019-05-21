@@ -68,10 +68,6 @@ class Home extends Component {
       }
 
       const newPoint = { ...values };
-
-      //Creo que esto no debería ser un parámetro del endpoint
-      newPoint.visible = true
-
       const promise = poiAPI.add(newPoint)
       promise
         .then(_ => {
