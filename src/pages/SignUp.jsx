@@ -1,19 +1,18 @@
 import React from 'react';
-
+import {message} from 'antd';
 import {
   Form, Icon, Input, Button,
 } from 'antd';
 
-import './Login.css'
+import './SignUp.css'
 
-class NormalLoginForm extends React.Component {
+class RegisterForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-         if(values.username ==='admin' && values.password==='admin')this.props.userContext.login(values.username, values.password)
-        this.props.notifyLogIn()
-        this.props.history.push("/");
+        //this.props.userContext.register(values.username, values.password)
+        message.success("Usuario registrado correctamente.") //ponele
       }
     });
   }
@@ -21,7 +20,7 @@ class NormalLoginForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (
-      <Form onSubmit={this.handleSubmit} className="login-form">
+      <Form onSubmit={this.handleSubmit} className="signup-form">
         <Form.Item>
           {getFieldDecorator('username', {
             rules: [{ required: true, message: 'Por favor ingresa un nombre de usuario' }],
@@ -37,8 +36,8 @@ class NormalLoginForm extends React.Component {
           )}
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-form-button">
-            Ingresar
+          <Button type="primary" htmlType="submit" className="signup-form-button">
+            Registrarse
           </Button>
         </Form.Item>
       </Form>
@@ -46,6 +45,6 @@ class NormalLoginForm extends React.Component {
   }
 }
 
-const Login = Form.create({ name: 'login' })(NormalLoginForm);
+const SignUp = Form.create({ name: 'signUp' })(RegisterForm);
 
-export default Login;
+export default SignUp;

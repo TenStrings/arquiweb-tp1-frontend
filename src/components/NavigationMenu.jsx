@@ -3,6 +3,7 @@ import { Menu, Icon, Input, Alert, message, Modal, Button } from 'antd';
 import { Link } from "react-router-dom";
 
 import { suggestionsAPI } from '../api';
+//import { authModal } from './AuthModal';
 
 
 const SubMenu = Menu.SubMenu;
@@ -11,13 +12,25 @@ String.prototype.capitalize = function() {
 };
 
 class NavigationMenu extends Component {
+
   state = {
     loading: false,
-    loginModalShow: false,
     suggestModalVisible: false,
     suggestedCategory: ""
-   };
+  };
 
+  handleClick = (e) => {
+     const { key } = e
+     if (key === "logout") {
+       this.props.userContext.logout()
+       this.props.history.push("/");
+       this.props.notifyLogOut()
+     }
+     else if (key === "suggest_category") this.showSuggestModal()
+     let { onClick } = this.props
+     onClick && onClick(e.key)
+   }
+  //****************** Suggestions *************************//
   showSuggestModal = () => {
     this.setState({
       suggestModalVisible: true, suggestedCategory: ""
@@ -52,17 +65,40 @@ class NavigationMenu extends Component {
     this.setState({ availableSuggestion: available , suggestedCategory: suggestedName});
   };
 
-  handleClick = (e) => {
-    const { key } = e
-    if (key === "logout") this.props.userContext.logout()
-    else if (key === "suggest_category") this.showSuggestModal()
-    let { onClick } = this.props
-    onClick && onClick(e.key)
+  //************************* Log in *********************//
+  /*
+  handleLogIn = () => {
+    this.setState(state => {
+      const { prevModal } = state
+      const newModal = Object.assign({}, prevModal)
+      newModal.confirmLoading = true
+      return newModal
+    })
+
+    const form = this.formRef.props.form;
+    form.validateFields((err, values) => {
+      if (!err) {
+        await this.props.userContext.login(values.username, values.password)
+        form.resetFields()
+        this.setState({ authModal: null })
+      }
+    });
   }
+
+  handleAuthCancel = () => {
+    const form = this.formRef.props.form;
+    form.resetFields()
+    this.setState({ authModal: null })
+  }
+
+  saveLoginFormRef = formRef => {
+    this.formRef = formRef
+  }*/
 
   render() {
     const { user } = this.props.userContext
     const { suggestModalVisible, loading, availableSuggestion, suggestedCategory} = this.state;
+
     return (
         <React.Fragment>
           <Modal
@@ -80,8 +116,8 @@ class NavigationMenu extends Component {
             ]}
           >
               <Input size="large" placeholder="Nombre" onChange={this.onSuggestionChange} value={suggestedCategory} allowClear />
-              {suggestedCategory && availableSuggestion && <Alert message="The category is available" type="success" showIcon /> }
-              {suggestedCategory && !availableSuggestion && <Alert message="There is already an equal category" type="error" showIcon /> }
+              {suggestedCategory && availableSuggestion && <Alert message="Categoría disponible" type="success" showIcon /> }
+              {suggestedCategory && !availableSuggestion && <Alert message="Ya existe una categoría con ese nombre" type="error" showIcon /> }
 
           </Modal>
           <Menu
@@ -135,7 +171,7 @@ class NavigationMenu extends Component {
             }
 
             {
-              user &&
+              (user || this.props.mockedUser) &&
               (
                 <Menu.Item key="logout">
                   <Icon type="logout" />Logout
@@ -143,7 +179,7 @@ class NavigationMenu extends Component {
               )
             }
             {
-              !user &&
+              (!user && !this.props.mockedUser) &&
               (
                 <Menu.Item key="login">
                   <Link to="/login">
@@ -153,12 +189,12 @@ class NavigationMenu extends Component {
               )
             }
             {
-              !user &&
+              (!user && !this.props.mockedUser) &&
               (
                 <Menu.Item key="signUp">
-                  <Link to="/login">
+                  <Link to="/register">
                     <Icon type="form" />Sign up
-                            </Link>
+                  </Link>
                 </Menu.Item>
               )
             }

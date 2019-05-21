@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import UserContext from './UserContext';
+import {message} from 'antd';
 import decode from 'jwt-decode';
 import { userAPI } from "../api";
 
@@ -25,6 +26,17 @@ class UserProvider extends Component {
             })
         } catch (err) {
             alert(err);
+        }
+    }
+
+    register = async (username, password) => {
+        try {
+          let succeded = await userAPI.regiter(username, password)
+          if(succeded) {
+            message.success("Usuario registrado correctamente.")
+          }
+        } catch (err) {
+            message.error(err)
         }
     }
 
