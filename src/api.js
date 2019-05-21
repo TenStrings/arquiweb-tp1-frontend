@@ -25,8 +25,6 @@ export const poiAPI = {
     }
 }
 
-
-
 export const categoriesAPI = {
     get: function () {
       return axios.get(`${apiServer}/category`);
@@ -47,7 +45,7 @@ export const categoriesAPI = {
         console.log(category.icon)
 
         return axios.put(
-            `http://localhost:4000/category/${category._id}`,
+            `${apiServer}/category/${category._id}`,
             formData, { headers: { "Authorization": `Bearer ${token}` } }
         )
     },
