@@ -1,4 +1,4 @@
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, Button, Icon, Upload } from 'antd';
 import React from 'react';
 import { Select } from 'antd';
 
@@ -24,6 +24,18 @@ export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
             <Form.Item label="Descripción">
               {getFieldDecorator('description')(<Input type="textarea" />)}
             </Form.Item>
+
+            <Form.Item label="Image">
+             {getFieldDecorator('icon', {
+               rules: [{ required: true, message: 'Por favor ingrese una imagen'}],
+             })(
+             <Upload beforeUpload={file => false}>
+               <Button>
+                 <Icon type="upload" /> Click to Upload
+               </Button>
+             </Upload>
+               )}
+           </Form.Item>
           </Form>
         </Modal>
       );

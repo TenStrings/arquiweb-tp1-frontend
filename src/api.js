@@ -10,8 +10,26 @@ export const poiAPI = {
         return axios.post(`${apiServer}/point`, point);
     },
     update: function (point, token) {
+        const formData = new FormData();
+
+        console.log('POSITION')
+        console.log(point.position)
+        formData.append('name', point.name)
+        formData.append('position', point.position)
+        formData.append('description', point.description)
+        formData.append('categoryName', point.categoryName)
+        formData.append('visible', point.visible)
+        formData.append('file', point.icon.file);
+
         return axios.put(
             `${apiServer}/point/${point._id}`,
+            formData,
+            { headers: { "Authorization": `Bearer ${token}` } }
+        )
+    },
+    updateVisibility: function (point, token) {
+        return axios.put(
+            `${apiServer}/point/${point._id}/visibility`,
             point,
             { headers: { "Authorization": `Bearer ${token}` } }
         )
@@ -43,8 +61,6 @@ export const categoriesAPI = {
 
         formData.append('title', category.title)
         formData.append('file', category.icon.file);
-
-        console.log(category.icon)
 
         return axios.put(
             `http://localhost:4000/category/${category._id}`,

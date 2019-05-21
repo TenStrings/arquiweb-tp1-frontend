@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Switch, message } from 'antd';
+import { Table, Button, Switch, message, Avatar } from 'antd';
 import { PointEditForm } from '../components/PointModal';
 import { poiAPI } from '../api';
 
@@ -10,6 +10,13 @@ class BackofficePoints extends Component {
   updatePoint(point) {
     return poiAPI
     .update(point, this.props.userContext.token)
+    .then(() => this.props.notifyPointChange())
+    .catch(() => console.log("BackofficePoints: failed to update point"));
+  }
+
+  updatePointVisibility(point) {
+    return poiAPI
+    .updateVisibility(point, this.props.userContext.token)
     .then(() => this.props.notifyPointChange())
     .catch(() => console.log("BackofficePoints: failed to update point"));
   }
@@ -31,7 +38,7 @@ class BackofficePoints extends Component {
   onVisibilityChange = (checked, point) => {
     //const { userContext } = this.props
     this.toggleLoading(point)
-    this.updatePoint({...point, visible: checked})
+    this.updatePointVisibility({...point, visible: checked})
       .finally(() => this.toggleLoading(point))
       .then(() => message.success("El punto se actualizó correctamente"))
       .catch(() => message.error("El punto no pudo actualizarse"))
@@ -138,7 +145,8 @@ class BackofficePoints extends Component {
         lat: point.position.lat,
         lng: point.position.lng,
         description: point.description,
-        img: "unBoton a img",
+        img: <Avatar
+        src= {"http://localhost:4000/static/pointImages/"+point.name } />,
         cat: point.categoryName,
         visible: <Switch loading={loading[point._id]} defaultChecked={point.visible}
                          onChange={checked => this.onVisibilityChange(checked, point)}
