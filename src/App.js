@@ -94,22 +94,20 @@ class App extends Component {
           <Switch>
 
             <Route exact path='/' render={props => (
-                <Home
-                  points={visiblePoints}
-                  categories={visibleCategories}
-                  notifyPointChange={this.onPointChange}
-                />
-            )}/>
+              <Home
+                points={visiblePoints}
+                categories={visibleCategories}
+                notifyPointChange={this.onPointChange}
+              />
+            )} />
 
-            {
             <Route path="/backoffice_points" render={ props => (
                 <ContextBackofficePoints
                   points={points}
                   categories={categories}
                   notifyPointChange={this.onPointChange}
                 />
-            )}/>
-            }
+              )} />
 
             <Route path='/backoffice_approved_categories' render={ props => (
                 <ContextBackofficeCategories

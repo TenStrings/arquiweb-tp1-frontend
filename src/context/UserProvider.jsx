@@ -7,7 +7,7 @@ class UserProvider extends Component {
     constructor(props) {
         super(props)
         const token = localStorage.getItem("token")
-        const user = token ? decode(token) : null
+        const user = token ? decode(token)["user_claims"] : null
         this.state = {
             user: user,
             token: token,
