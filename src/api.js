@@ -25,6 +25,8 @@ export const poiAPI = {
     }
 }
 
+
+
 export const categoriesAPI = {
     get: function () {
       return axios.get(`${apiServer}/category`);
@@ -37,12 +39,27 @@ export const categoriesAPI = {
       );
     },
     update: function (category, token) {
+        const formData = new FormData();
+
+        formData.append('title', category.title)
+        formData.append('file', category.icon.file);
+
+        console.log(category.icon)
+
         return axios.put(
-            `${apiServer}/category/${category._id}`,
+            `http://localhost:4000/category/${category._id}`,
+            formData, { headers: { "Authorization": `Bearer ${token}` } }
+        )
+    },
+
+    updateVisibility: function (category, token) {
+        return axios.put(
+            `${apiServer}/category/${category._id}/visibility`,
             category,
             { headers: { "Authorization": `Bearer ${token}` } }
         )
     },
+
     delete: function (category, token) {
         return axios.delete(
             `${apiServer}/category/${category._id}`,
