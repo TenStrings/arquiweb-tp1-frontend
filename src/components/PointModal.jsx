@@ -25,13 +25,13 @@ export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
               {getFieldDecorator('description')(<Input type="textarea" />)}
             </Form.Item>
 
-            <Form.Item label="Image">
-             {getFieldDecorator('icon', {
+            <Form.Item label="Imagen">
+             {getFieldDecorator('image', {
                rules: [{ required: true, message: 'Por favor ingrese una imagen'}],
              })(
              <Upload beforeUpload={file => false}>
                <Button>
-                 <Icon type="upload" /> Click to Upload
+                 <Icon type="upload" /> Subir imagen
                </Button>
              </Upload>
                )}

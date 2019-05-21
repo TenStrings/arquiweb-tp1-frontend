@@ -78,12 +78,12 @@ class BackofficePoints extends Component {
       .then(() => {
         form.resetFields()
         this.setState({ modal: null })
-        message.success("La categoría se actualizó correctamente")}
+        message.success("El marcador se actualizó correctamente")}
       )
       .catch(() => {
         form.resetFields()
         this.setState({ modal: null })
-        message.error("La categoría no pudo actualizarse")
+        message.error("El marcador no pudo actualizarse")
       })
     });
   }
@@ -146,7 +146,7 @@ class BackofficePoints extends Component {
         lng: point.position.lng,
         description: point.description,
         img: <Avatar
-        src= {"http://localhost:4000/static/pointImages/"+point.name } />,
+        src= {"http://localhost:4000/static/pointImages/"+point.image } />,
         cat: point.categoryName,
         visible: <Switch loading={loading[point._id]} defaultChecked={point.visible}
                          onChange={checked => this.onVisibilityChange(checked, point)}

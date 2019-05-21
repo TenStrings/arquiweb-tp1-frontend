@@ -11,15 +11,12 @@ export const poiAPI = {
     },
     update: function (point, token) {
         const formData = new FormData();
-
-        console.log('POSITION')
-        console.log(point.position)
         formData.append('name', point.name)
         formData.append('position', point.position)
         formData.append('description', point.description)
         formData.append('categoryName', point.categoryName)
         formData.append('visible', point.visible)
-        formData.append('file', point.icon.file);
+        formData.append('file', point.image.file);
 
         return axios.put(
             `${apiServer}/point/${point._id}`,
