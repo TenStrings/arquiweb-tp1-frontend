@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Row, Col, Card, message, Divider, Avatar } from 'antd';
+import {withRouter} from 'react-router-dom'
 
 import MainMap from '../components/MainMap';
 import POIFilter from '../components/POIFilter'
@@ -8,6 +9,9 @@ import CategoryFilter from '../components/CategoryFilter'
 import { PointAddForm } from '../components/PointModal';
 
 import { poiAPI } from '../api';
+import { withUserContext } from '../context/withUserContext';
+
+const ContextMainMap = withRouter(withUserContext(MainMap))
 
 const {Meta} = Card;
 
@@ -172,7 +176,8 @@ class Home extends Component {
         />
         <Row id="Mapa">
           <Col>
-            <MainMap
+            <ContextMainMap
+              mockedUser = {this.props.mockedUser}
               markers={this.getFilteredMarkers()}
               onClick={this.onMapClick}
               showMyPosition={true}

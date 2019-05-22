@@ -77,8 +77,13 @@ class MainMap extends Component {
 
     onAddPointClick = () => {
         const { popup } = this.state
-        this.props.onNewPoint(popup.position)
-        this.setState({ popup: null })
+        if ( this.props.userContext.user  || this.props.mockedUser) {
+          this.props.onNewPoint(popup.position)
+          this.setState({ popup: null })
+        }
+        else {
+          this.props.history.push("/login");
+        }
     }
 
     onClose() {

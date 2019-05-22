@@ -102,6 +102,7 @@ class App extends Component {
 
             <Route exact path='/' render={props => (
               <Home
+                mockedUser={this.state.mocked_logedin}
                 points={visiblePoints}
                 categories={visibleCategories}
                 notifyPointChange={this.onPointChange}
