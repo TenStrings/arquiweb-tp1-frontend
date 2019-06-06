@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const apiServer = "http://localhost:4000"
+const apiServer = process.env.REACT_APP_HEROKU ?
+    "https://jugo-maps-api.herokuapp.com" : "http://localhost:4000"
 
 export const poiAPI = {
     get: function () {
@@ -33,7 +34,7 @@ export const poiAPI = {
     },
     delete: function (point, token) {
         return axios.delete(
-          `${apiServer}/point/${point._id}`,
+            `${apiServer}/point/${point._id}`,
             point,
             { headers: { "Authorization": `Bearer ${token}` } }
         )
@@ -42,14 +43,14 @@ export const poiAPI = {
 
 export const categoriesAPI = {
     get: function () {
-      return axios.get(`${apiServer}/category`);
+        return axios.get(`${apiServer}/category`);
     },
     add: function (category, token) {
-      return axios.post(
-        `${apiServer}/category`,
-        category,
-        { headers: { "Authorization": `Bearer ${token}` } }
-      );
+        return axios.post(
+            `${apiServer}/category`,
+            category,
+            { headers: { "Authorization": `Bearer ${token}` } }
+        );
     },
     update: function (category, token) {
         const formData = new FormData();
@@ -82,13 +83,13 @@ export const categoriesAPI = {
 
 export const suggestionsAPI = {
     get: function () {
-      return axios.get(`${apiServer}/suggested_category`);
+        return axios.get(`${apiServer}/suggested_category`);
     },
     add: function (suggestion) {
         return axios.post(
-          `${apiServer}/suggested_category`,
-           suggestion
-         );
+            `${apiServer}/suggested_category`,
+            suggestion
+        );
     },
     delete: function (suggestion, token) {
         return axios.delete(
@@ -103,18 +104,18 @@ export const userAPI = {
     authenticate: function (username, password) {
         return axios.post(
             `${apiServer}/auth/login`,
-            {username: username,password: password}
+            { username: username, password: password }
         ).then(
             response => response["data"]["access_token"]
         )
     },
     register: function (username, password) {
-      return axios.post(
-          `${apiServer}/auth/register`,
-          {username: username, password: password}
-      ).then(
-          response => response["data"]["succeded"]
-      )
+        return axios.post(
+            `${apiServer}/auth/register`,
+            { username: username, password: password }
+        ).then(
+            response => response["data"]["succeded"]
+        )
     }
 }
 /*
