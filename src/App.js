@@ -21,17 +21,6 @@ const ContextBackofficePoints = withUserContext(BackofficePoints)
 const ContextBackofficeCategories = withUserContext(BackofficeCategories)
 const ContextBackofficeSuggestions = withUserContext(BackofficeSugCategories)
 
-//rest en nuestro caso es solo path= pero hay mas atributos
-//que se le pueden pasar a Route
-/*
-const FadingRoute = ({ component: Component, ...rest }) => (
-  <Route {...rest} render={props => (
-    <FadeIn>
-      <Component {...props}/>
-    </FadeIn>
-  )}/>
-)*/
-
 class App extends Component {
 
   state = {
