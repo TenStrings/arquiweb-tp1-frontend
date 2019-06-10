@@ -1,10 +1,13 @@
 import axios from 'axios';
 
-const guidoAPI = "https://pointerest-arq.herokuapp.com"
+const guido_API = "https://pointerest-arq.herokuapp.com"
 
 export const guidoAPI = {
     getPoints: function () {
         return axios.get(`${guido_API}/points.json`);
+    },
+    getCategories: function () {
+        return axios.get(`${guido_API}/categories.json`);
     }
 }
 
@@ -36,7 +39,7 @@ export const lucasAPI = {
         return axios.get(`${lucas_API}/points?categories=&title=`);
     },
     getPointImage: function(pointId) {
-      return axios.get(`${lucas_API}/points/${pointid}/image`);
+      return axios.get(`${lucas_API}/points/${pointId}/image`);
     },
     getCategoryIcon: function(categoryId) {
       return axios.get(`${lucas_API}/categories/${categoryId}/image`);

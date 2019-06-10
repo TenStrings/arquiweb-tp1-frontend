@@ -160,7 +160,7 @@ class BackofficeCategories extends Component {
     const modalConfirmLoading = this.state.modal && this.state.modal.confirmLoading
     return (
       <React.Fragment>
-        <Table columns={columns} dataSource={data} scroll={{ y: 600 }} />);
+        <Table columns={columns} dataSource={data} scroll={{ y: 600 }} />;
         <CategoryEditForm
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
@@ -168,8 +168,8 @@ class BackofficeCategories extends Component {
           onConfirm={this.onEditConfirmation}
           confirmLoading={modalConfirmLoading}
         />
-      </React.Fragment>)
-
+      </React.Fragment>
+    )
   }
 }
 

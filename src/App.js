@@ -13,6 +13,8 @@ import NavigationMenu from './components/NavigationMenu';
 import { withUserContext } from './context/withUserContext';
 import UserProvider from './context/UserProvider';
 import { poiAPI, categoriesAPI, suggestionsAPI } from './api';
+import { lucasAPI, guidoAPI} from './extern_apis';
+
 
 const ContextLogin = withUserContext(withRouter(Login))
 const ContextSignUp = withUserContext(SignUp)
@@ -32,46 +34,123 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.loadPointsFromAPI()
-    this.loadCategoriesFromAPI()
-    this.loadSuggestionsFromAPI()
+    this.loadOurPoints()
+    this.loadOurCategories()
+    this.loadOurSuggestions()
+    this.loadExternData()
   }
 
-  loadPointsFromAPI = () => {
+  loadExternData = async() => {
+    let extern_points = []
+    let extern_categories = []
+
+    let guido_points = await guidoAPI.getPoints()
+    guido_points.forEach(p => {
+        let extern_point = {
+            _id: p.id,
+            position: {'lat':p.lat,'lng':p.long},
+            name: p.name,
+            description: p.description,
+            image:p.img,
+            categoryName:p.category.name,
+            visible: true,
+            extern: true
+        }
+        extern_points.push(extern_point)
+    })
+
+    let lucas_points = await lucasAPI.getPoints()
+    lucas_points.forEach(p => {
+        let extern_point = {
+            _id: p.id,
+            position: {'lat':p.latitude,'lng':p.longitude},
+            name: p.title,
+            description: p.description,
+            image:p.imageUrl,
+            categoryName:p.category.name,
+            visible: true,
+            extern: true
+        }
+        extern_points.push(extern_point)
+    })
+
+    let guido_categories = await guidoAPI.getCategories()
+    guido_categories.forEach(c => {
+        if (c.status === "APPROVED"){
+            let extern_category = {
+                _id: c.id,
+                title: c.name,
+                icon: c.icon,
+                visible: true,
+                extern: true
+            }
+            extern_categories.push(extern_category)
+        }
+    })
+
+    let lucas_categories = await lucasAPI.getCategories()
+    lucas_categories.forEach(c => {
+        if (c.state === "APPROVED"){
+            let extern_category = {
+                _id: c.id,
+                title: c.name,
+                icon: c.logoUrl,
+                visible: true,
+                extern: true
+            }
+            extern_categories.push(extern_category)
+        }
+    })
+
+    this.setState(prevState => ({
+      points: {...prevState.points, ...extern_points},
+      categories: {...prevState.categories, ...extern_categories}
+    }))
+
+  }
+
+  loadOurPoints = () => {
     poiAPI.get()
     .then(res => {
-      this.setState({ points: res.data });
+      let our_points = []
+      res.data.map(p => our_points.push({...p, extern:false}))
+      this.setState({ points: our_points });
     });
   }
 
-  loadCategoriesFromAPI = () => {
+  loadOurCategories = () => {
     categoriesAPI.get()
     .then(res => {
-      this.setState({ categories: res.data });
+      let our_categories = []
+      res.data.map(c => our_categories.push({...c, extern:false}))
+      this.setState({ categories: our_categories });
     })
   }
 
-  loadSuggestionsFromAPI = () => {
+  loadOurSuggestions = () => {
     suggestionsAPI.get()
     .then(res => {
-      this.setState({ suggestions: res.data });
+      let our_suggestions = []
+      res.data.map(s => our_suggestions.push({...s, extern:false}))
+      this.setState({ suggestions: our_suggestions });
     })
   }
 
   onPointChange = () => {
-    this.loadPointsFromAPI()
+    this.loadOurPoints()
+    this.loadOurCategories()
   }
 
   onCategoryChange = () => {
-    this.loadCategoriesFromAPI()
-    this.loadPointsFromAPI()
+    this.loadOurPoints()
+    this.loadOurCategories()
   }
   onNewSuggestion = () => {
-    this.loadSuggestionsFromAPI()
+    this.loadOurSuggestions()
   }
   onSuggestionSolved = was_accepted => {
-    this.loadSuggestionsFromAPI()
-    if (was_accepted) this.loadCategoriesFromAPI()
+    this.loadOurSuggestions()
+    if (was_accepted) this.loadOurCategories()
   }
 
   onLogIn = () => this.setState({mocked_logedin:true})

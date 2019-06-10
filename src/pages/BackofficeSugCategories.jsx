@@ -70,7 +70,7 @@ class BackofficeSugCategories extends Component {
         }
       ];
 
-      const data = suggestions.map( sug => ({
+      const data = suggestions && suggestions.map( sug => ({
           key : sug._id,
           title : sug.title,
           icon: sug.icon,
