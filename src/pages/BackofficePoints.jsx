@@ -48,8 +48,13 @@ class BackofficePoints extends Component {
 
   showEditModal = point => {
     const form = this.formRef.props.form;
-    form.setFieldsValue({ name: point.name, description: point.description }, () => {
-      this.setState({ modal: point})}
+    form.setFieldsValue(
+      { name: point.name,
+        description: point.description,
+        categoryName:
+        point.categoryName
+      },
+      () => {this.setState({ modal: point})}
     )
   }
 
@@ -162,12 +167,13 @@ class BackofficePoints extends Component {
 
     return (
       <React.Fragment>
-        <Table columns={columns} dataSource={data} scroll={{ y: 600 }} />);
+        <Table columns={columns} dataSource={data} scroll={{ y: 600 }} />
         <PointEditForm
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
           onCancel={this.onEditCancel}
           onConfirm={this.onEditConfirmation}
+          categories={categories}
         />
       </React.Fragment>)
   }

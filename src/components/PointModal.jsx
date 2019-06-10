@@ -5,7 +5,7 @@ import { Select } from 'antd';
 export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
   class extends React.Component {
     render() {
-      const { visible, onCancel, onConfirm, form } = this.props;
+      const { visible, onCancel, onConfirm, form, categories } = this.props;
       const { getFieldDecorator } = form;
       return (
         <Modal
@@ -35,6 +35,17 @@ export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
                </Button>
              </Upload>
                )}
+           </Form.Item>
+           <Form.Item label="Categoría">
+             {getFieldDecorator('categoryName')(
+               <Select >
+                 {categories.map(category => (
+                   <Select.Option value={category.title} key={category.title}>
+                     {category.title}
+                   </Select.Option>)
+                 )}
+               </Select>
+             )}
            </Form.Item>
           </Form>
         </Modal>
