@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Menu, Icon, message, Upload, Button } from 'antd';
+import { Menu, Icon, message } from 'antd';
 import { Link } from "react-router-dom";
 
 import { suggestionsAPI } from '../api';
@@ -42,6 +42,7 @@ class NavigationMenu extends Component {
     }));
   };
   /*
+  , Upload, Button
   showSuggestModal = () => {
   const form = this.formRef.props.form;
   form.setFieldsValue(

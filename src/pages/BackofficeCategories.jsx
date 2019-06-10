@@ -46,7 +46,6 @@ class BackofficeCategories extends Component {
 
   showEditModal = category => {
     const form = this.formRef.props.form;
-    console.log("gets here")
     form.setFieldsValue({ title: category.title }, () =>
       this.setState({
         modal: {
@@ -78,8 +77,9 @@ class BackofficeCategories extends Component {
           if (err) {
             return;
           }
-
           const oldCategory = this.state.modal.category
+          console.log(oldCategory)
+
           const newCategory = { ...oldCategory, ...values }
 
           this.updateCategory(newCategory)

@@ -71,7 +71,9 @@ export const categoriesAPI = {
         const formData = new FormData();
         formData.append('title', category.title)
         formData.append('icon', category.icon)
-        let has_file = category.icon_file.file ? true:false
+        console.log(category.icon)
+        console.log("api.js")
+        let has_file = category.icon_file && category.icon_file.file ? true:false
         formData.append('has_file', has_file );
         if(has_file) formData.append('file', category.icon_file.file);
 

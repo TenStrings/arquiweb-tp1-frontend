@@ -73,7 +73,7 @@ export const SuggestCategoryForm = Form.create({ name: 'add_category_in_modal' }
             {
               suggestionNonEmpty &&
               <Form.Item label="Message">
-              this.alert
+              {alert}
               </Form.Item>
             }
           </Form>
@@ -105,9 +105,6 @@ export const CategoryEditForm = Form.create({ name: 'edit_category_in_modal' })(
               })(<Input/>)}
               </Form.Item>
               <Form.Item label="Icono">
-                {getFieldDecorator('icon')(<Input disabled type="textarea" />)}
-              </Form.Item>
-              <Form.Item label="File">
                {getFieldDecorator('icon_file', {
                  rules: [{ required: false}],
                })(
