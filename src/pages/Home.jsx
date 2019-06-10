@@ -35,12 +35,12 @@ class Home extends Component {
                        cover={
                          <img
                            alt="Loading"
-                           src={"http://localhost:4000/static/pointImages/" + point.image}
+                           src={point.image}
                          />
                        }
                      >
                        <Meta
-                         avatar={<Avatar src= {"http://localhost:4000/static/pointImages/" + point.image} />}
+                         avatar={<Avatar src= {point.image} />}
                          title={point.name}
                          description={point.description}
                        />
