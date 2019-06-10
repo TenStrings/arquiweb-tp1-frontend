@@ -71,3 +71,70 @@ export const lucasAPI = {
             }
 }]
 */
+
+export const adaptExternData = async() => {
+  let extern_points = []
+  let extern_categories = []
+
+  let guido_points = await guidoAPI.getPoints()
+  guido_points.forEach(p => {
+      let extern_point = {
+          _id: p.id,
+          position: {'lat':p.lat,'lng':p.long},
+          name: p.name,
+          description: p.description,
+          image:p.img,
+          categoryName:p.category.name,
+          visible: true,
+          extern: true
+      }
+      extern_points.push(extern_point)
+  })
+
+  let lucas_points = await lucasAPI.getPoints()
+  lucas_points.forEach(p => {
+      let extern_point = {
+          _id: p.id,
+          position: {'lat':p.latitude,'lng':p.longitude},
+          name: p.title,
+          description: p.description,
+          image:p.imageUrl,
+          categoryName:p.category.name,
+          visible: true,
+          extern: true
+      }
+      extern_points.push(extern_point)
+  })
+
+  let guido_categories = await guidoAPI.getCategories()
+  guido_categories.forEach(c => {
+      if (c.status === "APPROVED"){
+          let extern_category = {
+              _id: c.id,
+              title: c.name,
+              icon: c.icon,
+              visible: true,
+              extern: true
+          }
+          extern_categories.push(extern_category)
+      }
+  })
+
+  let lucas_categories = await lucasAPI.getCategories()
+  lucas_categories.forEach(c => {
+      if (c.state === "APPROVED"){
+          let extern_category = {
+              _id: c.id,
+              title: c.name,
+              icon: c.logoUrl,
+              visible: true,
+              extern: true
+          }
+          extern_categories.push(extern_category)
+      }
+  })
+  return ({
+          'categories': extern_categories,
+          'points': extern_points
+  })
+}
