@@ -26,28 +26,18 @@ const ContextBackofficeSuggestions = withUserContext(BackofficeSugCategories)
 class App extends Component {
 
   state = {
-    loginModalShow: false,
     points: [],
     categories: [],
     suggestions: [],
     mocked_logedin: false
   }
 
+  //Data Loading
   componentDidMount() {
     this.loadOurPoints()
     this.loadOurCategories()
     this.loadOurSuggestions()
-    this.loadExternData()
-  }
-
-  loadExternData = async() => {
-    let extern = await adaptExternData()
-    console.log("extern data")
-    console.log(extern)
-    this.setState(prevState => ({
-      points: prevState.points.concat(extern.points),
-      categories: prevState.categories.concat(extern.categories)
-    }));
+    //this.loadExternData()
   }
 
   loadOurPoints = () => {
@@ -76,23 +66,38 @@ class App extends Component {
     })
   }
 
+  //TODO HACER REFRESH DEL EXTERN DATA CADA X SEGUNDOS
+  loadExternData = async() => {
+    let extern = await adaptExternData()
+    console.log("extern data")
+    console.log(extern)
+    this.setState(prevState => ({
+      points: prevState.points.concat(extern.points),
+      categories: prevState.categories.concat(extern.categories)
+    }));
+  }
+
+
+  //**** Data reloading triggers  ****/
   onPointChange = () => {
     this.loadOurPoints()
-    this.loadOurCategories()
   }
 
   onCategoryChange = () => {
     this.loadOurPoints()
     this.loadOurCategories()
   }
+
   onNewSuggestion = () => {
     this.loadOurSuggestions()
   }
+
   onSuggestionSolved = was_accepted => {
     this.loadOurSuggestions()
     if (was_accepted) this.loadOurCategories()
   }
 
+  //Log In
   onLogIn = () => this.setState({mocked_logedin:true})
   onLogOut = () => this.setState({mocked_logedin:false})
 
@@ -104,10 +109,15 @@ class App extends Component {
     return (
       <UserProvider>
         <Router>
-          <AuthenticatedNavigationMenu mockedUser={this.state.mocked_logedin} notifyLogOut={this.onLogOut}
-                                       categories={categories} notifyNewSuggestion={this.onNewSuggestion}/>
-          <Switch>
 
+          <AuthenticatedNavigationMenu
+             mockedUser={this.state.mocked_logedin}
+             categories={categories}
+             notifyLogOut={this.onLogOut}
+             notifyNewSuggestion={this.onNewSuggestion}
+          />
+
+          <Switch>
             <Route exact path='/' render={props => (
               <Home
                 mockedUser={this.state.mocked_logedin}
@@ -120,7 +130,7 @@ class App extends Component {
             <Route path="/backoffice_points" render={ props => (
                 <ContextBackofficePoints
                   points={points}
-                  categories={categories}
+                  categories={categories} //ver por q es necesario
                   notifyPointChange={this.onPointChange}
                 />
               )} />
@@ -136,7 +146,7 @@ class App extends Component {
             <Route path='/backoffice_suggested_categories' render={ props => (
                 <ContextBackofficeSuggestions
                   suggestions={suggestions}
-                  notifySuggestionSolved={ this.onSuggestionSolved }
+                  notifySuggestionSolved={this.onSuggestionSolved}
                 />
             )}/>
 

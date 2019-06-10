@@ -51,9 +51,7 @@ class Home extends Component {
     }))
   }
 
-  onMapClick = (latlong) => {
-    console.log(latlong)
-  }
+  // ***** Children events ***** //
 
   OnNameFilterChange = aFilter => {
     this.setState({ nameFilter: aFilter })
@@ -61,6 +59,16 @@ class Home extends Component {
 
   OnCategoryFilterChange = aFilter => {
     this.setState({ categoryFilter: aFilter })
+  }
+
+  onMapClick = (latlong) => {
+    console.log(latlong)
+  }
+
+  // Add point
+
+  saveFormRef = formRef => {
+    this.formRef = formRef
   }
 
   onNewPoint = position => {
@@ -77,8 +85,8 @@ class Home extends Component {
 
   handleAddPointConfirm = () => {
     this.setState(state => {
-      const { prevModal } = state
-      const newModal = Object.assign({}, prevModal)
+      const { modal } = state
+      const newModal = Object.assign({}, modal)
       newModal.confirmLoading = true
       return newModal
     })
@@ -89,7 +97,9 @@ class Home extends Component {
         return;
       }
 
-      const newPoint = { ...values };
+      //solo agregamos puntos de categorias locales
+      const categoryId = this.props.categories.find( c =>{ return values.categoryName === c.name})._id
+      const newPoint = {...values, 'categoryId':categoryId };
       const promise = poiAPI.add(newPoint)
       promise
         .then(_ => {
@@ -110,13 +120,8 @@ class Home extends Component {
     this.setState({ modal: null })
   }
 
-  saveFormRef = formRef => {
-    this.formRef = formRef
-  }
-
   render() {
     const { points, categories } = this.props
-
     const modalConfirmLoading = this.state.modal && this.state.modal.confirmLoading
 
     const card_header_style = {backgroundColor: 'royalblue', color:'white'}

@@ -16,37 +16,40 @@ export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
           onOk={onConfirm}
         >
           <Form layout="vertical">
-            <Form.Item label="Nombre">
-              {getFieldDecorator('name', {
-                rules: [{ required: true, message: 'Por favor ingrese el nombre del punto' }],
-              })(<Input />)}
-            </Form.Item>
-            <Form.Item label="Descripción">
-              {getFieldDecorator('description')(<Input type="textarea" />)}
-            </Form.Item>
+              <Form.Item label="Nombre">
+                {getFieldDecorator('name', {
+                  rules: [{ required: true, message: 'Por favor ingrese el nombre del punto' }],
+                })(<Input />)}
+              </Form.Item>
+              <Form.Item label="Descripción">
+                {getFieldDecorator('description')(<Input type="textarea" />)}
+              </Form.Item>
 
-            <Form.Item label="Imagen">
-             {getFieldDecorator('image', {
-               rules: [{ required: true, message: 'Por favor ingrese una imagen'}],
-             })(
-             <Upload beforeUpload={file => false}>
-               <Button>
-                 <Icon type="upload" /> Subir imagen
-               </Button>
-             </Upload>
-               )}
-           </Form.Item>
-           <Form.Item label="Categoría">
-             {getFieldDecorator('categoryName')(
-               <Select >
-                 {categories.map(category => (
-                   <Select.Option value={category.title} key={category.title}>
-                     {category.title}
-                   </Select.Option>)
+              <Form.Item label="Imagen">
+                {getFieldDecorator('image')(<Input disabled type="textarea" />)}
+              </Form.Item>
+              <Form.Item label="Imagen_archivo">
+                 {getFieldDecorator('image_file', {
+                   rules: [{ required: true, message: 'Por favor ingrese una imagen'}],
+                 })(
+                 <Upload beforeUpload={file => false}>
+                   <Button>
+                     <Icon type="upload" /> Subir imagen
+                   </Button>
+                 </Upload>
+                   )}
+              </Form.Item>
+              <Form.Item label="Categoría">
+                 {getFieldDecorator('categoryName')(
+                   <Select >
+                     {categories.map(category => (
+                       <Select.Option value={category.title} key={category.title}>
+                         {category.title}
+                       </Select.Option>)
+                     )}
+                   </Select>
                  )}
-               </Select>
-             )}
-           </Form.Item>
+              </Form.Item>
           </Form>
         </Modal>
       );
@@ -75,6 +78,18 @@ export const PointAddForm = Form.create({ name: 'add_point_in_modal' })(
             </Form.Item>
             <Form.Item label="Descripción">
               {getFieldDecorator('description')(<Input type="textarea" />)}
+            </Form.Item>
+            <Form.Item label="Imagen">
+             {getFieldDecorator('image', {
+               rules: [{ required: true, message: 'Por favor ingrese una imagen'}],
+             })(
+             <Upload beforeUpload={file => false}>
+               <Button>
+                 <Icon type="upload" /> Subir imagen
+               </Button>
+             </Upload>
+               )
+             }
             </Form.Item>
             <Form.Item label="Categoría">
               {getFieldDecorator('categoryName')(

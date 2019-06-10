@@ -51,8 +51,7 @@ class BackofficePoints extends Component {
     form.setFieldsValue(
       { name: point.name,
         description: point.description,
-        categoryName:
-        point.categoryName
+        categoryName:point.categoryName
       },
       () => {this.setState({ modal: point})}
     )
@@ -75,11 +74,11 @@ class BackofficePoints extends Component {
       if (err) {
         return;
       }
-
-      const newPoint = {...this.state.modal, ...values };
+      const categoryId = this.props.categories.find( c =>{ return values.categoryName === c.name})._id
+      const updatedPoint = {...this.state.modal, ...values, 'categoryId':categoryId };
 
       //TODO: Probablemente esto debería ser una promise
-      this.updatePoint(newPoint)
+      this.updatePoint(updatedPoint)
       .then(() => {
         form.resetFields()
         this.setState({ modal: null })
@@ -151,7 +150,7 @@ class BackofficePoints extends Component {
         lng: point.position.lng,
         description: point.description,
         img: <Avatar
-        src= {"http://localhost:4000/static/pointImages/"+point.image } />,
+        src= { point.image } />,
         cat: point.categoryName,
         visible: <Switch loading={loading[point._id]} defaultChecked={point.visible}
                          onChange={checked => this.onVisibilityChange(checked, point)}

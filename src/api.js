@@ -8,16 +8,31 @@ export const poiAPI = {
         return axios.get(`${apiServer}/point`);
     },
     add: function (point) {
-        return axios.post(`${apiServer}/point`, point);
+        const formData = new FormData();
+        formData.append('name', point.name)
+        formData.append('position', point.position)
+        formData.append('description', point.description)
+        let has_file = point.image.file? true: false;
+        formData.append('has_file', has_file );
+        if (has_file)formData.append('file', point.image.file);
+        formData.append('categoryId', point.categoryId)
+        formData.append('categoryName', point.categoryName)
+
+        return axios.post(
+            `${apiServer}/point/`,
+            formData
+        )
     },
     update: function (point, token) {
         const formData = new FormData();
         formData.append('name', point.name)
         formData.append('position', point.position)
         formData.append('description', point.description)
+        let has_file = point.image.file? true: false;
+        formData.append('has_file', has_file );
+        if (has_file)formData.append('file', point.image.file);
+        formData.append('categoryId', point.categoryId)
         formData.append('categoryName', point.categoryName)
-        formData.append('visible', point.visible)
-        formData.append('file', point.image.file);
 
         return axios.put(
             `${apiServer}/point/${point._id}`,
@@ -28,7 +43,7 @@ export const poiAPI = {
     updateVisibility: function (point, token) {
         return axios.put(
             `${apiServer}/point/${point._id}/visibility`,
-            point,
+            {'visible':point.visible},
             { headers: { "Authorization": `Bearer ${token}` } }
         )
     },
@@ -45,7 +60,7 @@ export const categoriesAPI = {
     get: function () {
         return axios.get(`${apiServer}/category`);
     },
-    add: function (category, token) {
+    add: function (category, token) {  //the file was uploaded in the suggestion and we only add categories that were a suggestion
         return axios.post(
             `${apiServer}/category`,
             category,
@@ -54,9 +69,11 @@ export const categoriesAPI = {
     },
     update: function (category, token) {
         const formData = new FormData();
-
         formData.append('title', category.title)
-        formData.append('file', category.icon.file);
+        formData.append('icon', category.icon)
+        let has_file = category.icon_file.file ? true:false
+        formData.append('has_file', has_file );
+        if(has_file) formData.append('file', category.icon_file.file);
 
         return axios.put(
             `${apiServer}/category/${category._id}`,
@@ -67,7 +84,7 @@ export const categoriesAPI = {
     updateVisibility: function (category, token) {
         return axios.put(
             `${apiServer}/category/${category._id}/visibility`,
-            category,
+            {'visible':category.visible},
             { headers: { "Authorization": `Bearer ${token}` } }
         )
     },
@@ -86,10 +103,16 @@ export const suggestionsAPI = {
         return axios.get(`${apiServer}/suggested_category`);
     },
     add: function (suggestion) {
-        return axios.post(
-            `${apiServer}/suggested_category`,
-            suggestion
-        );
+      const formData = new FormData();
+      formData.append('title', suggestion.title)
+      let has_file = suggestion.icon && suggestion.icon.file ? true:false
+      formData.append('has_file', has_file );
+      if(has_file) formData.append('file', suggestion.icon.file);
+
+      return axios.post(
+          `${apiServer}/suggested_category`,
+          formData
+      )
     },
     delete: function (suggestion, token) {
         return axios.delete(

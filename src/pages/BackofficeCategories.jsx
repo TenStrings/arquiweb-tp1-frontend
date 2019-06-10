@@ -46,6 +46,7 @@ class BackofficeCategories extends Component {
 
   showEditModal = category => {
     const form = this.formRef.props.form;
+    console.log("gets here")
     form.setFieldsValue({ title: category.title }, () =>
       this.setState({
         modal: {
@@ -121,7 +122,7 @@ class BackofficeCategories extends Component {
         title: 'Nombre', width: 200, dataIndex: 'name',
       },
       {
-        title: 'Icono', dataIndex: 'img', width: 50, //button with card or popUp with image
+        title: 'Icono', dataIndex: 'icon', width: 50, //button with card or popUp with image
       },
       {
         title: 'Visible', dataIndex: 'visible', width: 50, //button with card or popUp with image
@@ -139,8 +140,8 @@ class BackofficeCategories extends Component {
       category => ({
         key: category._id,
         name: category.title,
-        img: <Avatar
-        src= {"http://localhost:4000/static/icons/" + category.icon} />,
+        icon: <Avatar
+        src= {category.icon} />,
         visible:
           <Switch
             loading={loading[category._id]}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, message } from 'antd';
+import { Table, Button, message, Avatar } from 'antd';
 
 import { suggestionsAPI, categoriesAPI } from '../api';
 
@@ -49,31 +49,29 @@ class BackofficeSugCategories extends Component {
     .catch(() => message.error("La sugerencia no pudo eliminarse"))
   }
 
-
-
   render() {
       const { loading } = this.state;
       const { suggestions } = this.props;
 
       const columns = [
         {
-          title: 'Titulo', width: 200, dataIndex: 'title',
+          title: 'Titulo', width: 200, dataIndex: 'title'
         },
         {
-          title: 'Icono', width: 100, dataIndex: 'icon',
+          title: 'Icono', width: 100, dataIndex: 'icon'
         },
         {
-          title: 'Aprobar', dataIndex: 'approve', width: 50,
+          title: 'Aprobar', dataIndex: 'approve', width: 100
         },
         {
-          title: 'Rechazar', dataIndex: 'reject', width: 50,
+          title: 'Rechazar', dataIndex: 'reject', width: 100
         }
       ];
 
       const data = suggestions && suggestions.map( sug => ({
           key : sug._id,
           title : sug.title,
-          icon: sug.icon,
+          icon: <Avatar src= {sug.icon} />,
           approve : <Button type="primary" shape="circle" icon="check" loading={loading[sug._id]}
                             onClick={() => this.onSugApproval(sug)}
                     />,

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Menu, Icon, Input, Alert, message, Modal, Button } from 'antd';
+import { Menu, Icon, message, Upload, Button } from 'antd';
 import { Link } from "react-router-dom";
 
 import { suggestionsAPI } from '../api';
 //import { authModal } from './AuthModal';
+import { SuggestCategoryForm } from './CategoryModal';
 
 
 const SubMenu = Menu.SubMenu;
@@ -14,9 +15,7 @@ String.prototype.capitalize = function() {
 class NavigationMenu extends Component {
 
   state = {
-    loading: false,
-    suggestModalVisible: false,
-    suggestedCategory: ""
+    suggestionModal : null,
   };
 
   handleClick = (e) => {
@@ -30,39 +29,67 @@ class NavigationMenu extends Component {
      let { onClick } = this.props
      onClick && onClick(e.key)
    }
+
   //****************** Suggestions *************************//
+  saveFormRef = formRef => {
+    this.formRef = formRef
+  }
+
   showSuggestModal = () => {
-    this.setState({
-      suggestModalVisible: true, suggestedCategory: ""
+    this.setState(prevState => ({
+      suggestionModal: {},
+      newSuggestion: !prevState.newSuggestion
+    }));
+  };
+  /*
+  showSuggestModal = () => {
+  const form = this.formRef.props.form;
+  form.setFieldsValue(
+    {icon: <Upload beforeUpload={file => false} multiple={false}>
+                <Button>
+                  <Icon type="upload" /> Subir imagen
+                </Button>
+            </Upload>
+    },
+    () => this.setState({
+      suggestionModal: {}
+    })
+  )
+  }
+  */
+
+  onSuggestionSubmission = () => {
+    this.setState(state => {
+      const { suggestionModal } = this.state
+      const newModal = Object.assign({}, suggestionModal)
+      newModal.confirmLoading = true
+      return newModal
+    })
+
+    const form = this.formRef.props.form;
+    form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+      const newSuggestion = {...values};
+      const promise = suggestionsAPI.add(newSuggestion)
+      promise
+        .then(_ => {
+          message.success("Sugerencia agregada correctamente.")
+          form.resetFields()
+          this.setState({ suggestionModal: null }, this.props.notifyNewSuggestion)
+        }).catch(e => {
+          message.error("No pudo realizarse la sugerencia.")
+          console.log(e)
+        })
+
     });
   };
 
-  onSuggestionSubmission = () => {
-    this.setState({ loading: true });
-    const suggestion = {
-        'title' : this.state.suggestedCategory,
-        'icon' :  "iconito TODO in NavMenu"
-    }
-    suggestionsAPI.add(suggestion)
-    .then(_ => {
-        message.success("Sugerencia agregada correctamente")
-        this.setState({ loading: false, suggestModalVisible: false, suggestedCategory: ""},
-                      this.props.notifyNewSuggestion)
-      }).catch(e => {
-        message.error("No pudo realizarse la sugerencia.")
-        console.log(e)
-        this.setState({ loading: false, suggestModalVisible: false, suggestedCategory: "" });
-      })
-  };
-
   onSuggestionCancel = e => {
-    this.setState({ suggestModalVisible: false });
-  };
-
-  onSuggestionChange = e => {
-    const suggestedName = e.target.value.capitalize()
-    const available = !this.props.categories.map(c => c.title).includes(suggestedName)
-    this.setState({ availableSuggestion: available , suggestedCategory: suggestedName});
+    const form = this.formRef.props.form;
+    form.resetFields()
+    this.setState({ suggestionModal: null })
   };
 
   //************************* Log in *********************//
@@ -96,30 +123,21 @@ class NavigationMenu extends Component {
   }*/
 
   render() {
+    const newSuggestion = this.state.newSuggestion
     const { user } = this.props.userContext
-    const { suggestModalVisible, loading, availableSuggestion, suggestedCategory} = this.state;
+    const modalConfirmLoading = this.state.suggestionModal && this.state.suggestionModal.confirmLoading
 
     return (
         <React.Fragment>
-          <Modal
-            visible={suggestModalVisible}
-            title="Sugerir nueva categoría"
-            onOk={this.onSuggestionSubmission}
+          <SuggestCategoryForm
+            key = {newSuggestion}
+            wrappedComponentRef={this.saveFormRef}
+            visible={Boolean(this.state.suggestionModal)}
+            onConfirm={this.onSuggestionSubmission}
             onCancel={this.onSuggestionCancel}
-            footer={[
-              <Button key="suggestion_cancel" onClick={this.onSuggestionCancel}>
-                Cancelar
-              </Button>,
-              <Button key="suggestion_submit" type="primary" loading={loading} onClick={this.onSuggestionSubmission}>
-                Enviar
-              </Button>,
-            ]}
-          >
-              <Input size="large" placeholder="Nombre" onChange={this.onSuggestionChange} value={suggestedCategory} allowClear />
-              {suggestedCategory && availableSuggestion && <Alert message="Categoría disponible" type="success" showIcon /> }
-              {suggestedCategory && !availableSuggestion && <Alert message="Ya existe una categoría con ese nombre" type="error" showIcon /> }
-
-          </Modal>
+            confirmLoading={modalConfirmLoading}
+            categories={this.props.categories}
+          />
           <Menu
             onClick={this.handleClick}
             selectedKeys={[this.state.current]}

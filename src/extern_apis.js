@@ -32,20 +32,20 @@ export const guidoAPI = {
   "source":"local",
   "url":"https://pointerest-arq.herokuapp.com/points/8.json"}
 */
-const lucas_API = "https://cors.io/?http://arq-web.herokuapp.com/api"
+const lucas_API = "https://cors.io/?http://arq-web.herokuapp.com"
 
 export const lucasAPI = {
     getPoints: function () {
-        return axios.get(`${lucas_API}/points?categories=&title=`);
+        return axios.get(`${lucas_API}/api/points?categories=&title=`);
     },
     getCategories: function() {
-        return axios.get(`${lucas_API}/categories?hidden=false&state=APPROVED`)
+        return axios.get(`${lucas_API}/api/categories?hidden=false&state=APPROVED`)
     },
     getPointImage: function(pointId) {
-      return axios.get(`${lucas_API}/points/${pointId}/image`);
+      return axios.get(`${lucas_API}/api/points/${pointId}/image`);
     },
     getCategoryIcon: function(categoryId) {
-      return axios.get(`${lucas_API}/categories/${categoryId}/image`);
+      return axios.get(`${lucas_API}/api/categories/${categoryId}/image`);
     }
 }
 
@@ -80,13 +80,16 @@ export async function adaptExternData() {
   let extern_categories = []
 
   let guido_points = await guidoAPI.getPoints()
-  guido_points.data.map(p => {
+  console.log("debuguing")
+  console.log(guido_points.data)
+  guido_points.data.forEach(p => {
       let extern_point = {
           _id: p.id,
           position: {'lat':p.lat,'lng':p.long},
           name: p.name,
           description: p.description,
           image:p.img,
+          categoryId:p.category.id,
           categoryName:p.category.name,
           visible: true,
           extern: true
@@ -95,22 +98,24 @@ export async function adaptExternData() {
   })
 
   let lucas_points = await lucasAPI.getPoints()
-  lucas_points.data.map(p => {
+  lucas_points.data.forEach(p => {
       let extern_point = {
           _id: p.id,
           position: {'lat':p.latitude,'lng':p.longitude},
           name: p.title,
           description: p.description,
-          image:p.imageUrl,
+          image: lucas_API + p.imageUrl,
+          categoryId: p.category.id,
           categoryName:p.category.name,
           visible: true,
           extern: true
       }
+      console.log(extern_point.image)
       extern_points.push(extern_point)
   })
 
   let guido_categories = await guidoAPI.getCategories()
-  guido_categories.data.map(c => {
+  guido_categories.data.forEach(c => {
       if (c.status === "APPROVED"){
           let extern_category = {
               _id: c.id,
@@ -124,7 +129,7 @@ export async function adaptExternData() {
   })
 
   let lucas_categories = await lucasAPI.getCategories()
-  lucas_categories.data.map(c => {
+  lucas_categories.data.forEach(c => {
       if (c.state === "APPROVED"){
           let extern_category = {
               _id: c.id,
