@@ -45,9 +45,9 @@ class App extends Component {
     console.log("extern data")
     console.log(extern)
     this.setState(prevState => ({
-      points: {...prevState.points, ...extern.points},
-      categories: {...prevState.categories, ...extern.categories}
-    }))
+      points: prevState.points.concat(extern.points),
+      categories: prevState.categories.concat(extern.categories)
+    }));
   }
 
   loadOurPoints = () => {

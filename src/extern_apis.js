@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const guido_API = "https://pointerest-arq.herokuapp.com"
+const guido_API = "https://cors.io/?https://pointerest-arq.herokuapp.com"
 
 export const guidoAPI = {
     getPoints: function () {
@@ -32,11 +32,14 @@ export const guidoAPI = {
   "source":"local",
   "url":"https://pointerest-arq.herokuapp.com/points/8.json"}
 */
-const lucas_API = "http://arq-web.herokuapp.com/api"
+const lucas_API = "https://cors.io/?http://arq-web.herokuapp.com/api"
 
 export const lucasAPI = {
     getPoints: function () {
         return axios.get(`${lucas_API}/points?categories=&title=`);
+    },
+    getCategories: function() {
+        return axios.get(`${lucas_API}/categories?hidden=false&state=APPROVED`)
     },
     getPointImage: function(pointId) {
       return axios.get(`${lucas_API}/points/${pointId}/image`);
@@ -72,12 +75,12 @@ export const lucasAPI = {
 }]
 */
 
-export const adaptExternData = async() => {
+export async function adaptExternData() {
   let extern_points = []
   let extern_categories = []
 
   let guido_points = await guidoAPI.getPoints()
-  guido_points.forEach(p => {
+  guido_points.data.map(p => {
       let extern_point = {
           _id: p.id,
           position: {'lat':p.lat,'lng':p.long},
@@ -92,7 +95,7 @@ export const adaptExternData = async() => {
   })
 
   let lucas_points = await lucasAPI.getPoints()
-  lucas_points.forEach(p => {
+  lucas_points.data.map(p => {
       let extern_point = {
           _id: p.id,
           position: {'lat':p.latitude,'lng':p.longitude},
@@ -107,7 +110,7 @@ export const adaptExternData = async() => {
   })
 
   let guido_categories = await guidoAPI.getCategories()
-  guido_categories.forEach(c => {
+  guido_categories.data.map(c => {
       if (c.status === "APPROVED"){
           let extern_category = {
               _id: c.id,
@@ -121,7 +124,7 @@ export const adaptExternData = async() => {
   })
 
   let lucas_categories = await lucasAPI.getCategories()
-  lucas_categories.forEach(c => {
+  lucas_categories.data.map(c => {
       if (c.state === "APPROVED"){
           let extern_category = {
               _id: c.id,

@@ -180,7 +180,7 @@ class Home extends Component {
               mockedUser = {this.props.mockedUser}
               markers={this.getFilteredMarkers()}
               onClick={this.onMapClick}
-              showMyPosition={true}
+              showMyPosition={false}
               onNewPoint={this.onNewPoint}
               tabs={tabs}
             />
