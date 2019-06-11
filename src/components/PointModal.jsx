@@ -79,7 +79,7 @@ export const PointAddForm = Form.create({ name: 'add_point_in_modal' })(
               {getFieldDecorator('description')(<Input type="textarea" />)}
             </Form.Item>
             <Form.Item label="Imagen">
-             {getFieldDecorator('image', {
+             {getFieldDecorator('image_file', {
                rules: [{ required: false}],
              })(
              <Upload beforeUpload={file => false}>
