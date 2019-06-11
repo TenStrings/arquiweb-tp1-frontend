@@ -38,13 +38,13 @@ class App extends Component {
     this.loadOurCategories()
     this.loadOurSuggestions()
     this.loadExternData()
-    setInterval(() => {
+  /*  setInterval(() => {
       this.loadOurPoints()
       this.loadOurCategories()
       this.loadOurSuggestions()
       this.loadExternData()
     }, 20000);
-  }
+  }*/
 
   loadOurPoints = () => {
     poiAPI.get()
