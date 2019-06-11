@@ -37,13 +37,13 @@ class App extends Component {
     this.loadOurPoints()
     this.loadOurCategories()
     this.loadOurSuggestions()
-    this.loadExternData()
+    //this.loadExternData()
   }
 
   loadOurPoints = () => {
     poiAPI.get()
     .then(res => {
-      let our_points = res.data.map(p => ({...p, extern:false}))
+      let our_points = res.map(p => ({...p, extern:false}))
       this.setState({ points: our_points });
     });
   }
@@ -106,7 +106,7 @@ class App extends Component {
     const visiblePoints = points.filter(p => p.visible)
     const ourVisiblePoints = visiblePoints.filter(p => !p.extern)
     const visibleCategories = categories.filter(c => c.visible)
-
+    console.log(ourVisiblePoints)
     return (
       <UserProvider>
         <Router>

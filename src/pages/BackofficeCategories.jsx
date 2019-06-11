@@ -78,8 +78,6 @@ class BackofficeCategories extends Component {
             return;
           }
           const oldCategory = this.state.modal.category
-          console.log(oldCategory)
-
           const newCategory = { ...oldCategory, ...values }
 
           this.updateCategory(newCategory)

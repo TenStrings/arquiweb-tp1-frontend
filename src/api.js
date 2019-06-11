@@ -1,25 +1,31 @@
 import axios from 'axios';
+import L from 'leaflet'
 
 const apiServer = process.env.REACT_APP_HEROKU ?
     "https://jugo-maps-api.herokuapp.com" : "http://localhost:4000"
 
 export const poiAPI = {
-    get: function () {
-        return axios.get(`${apiServer}/point`);
+    get: async function () {
+        let points = (await axios.get(`${apiServer}/point`)).data;
+        console.log(points)
+        return points.map(p => {
+          let pos = JSON.parse(p.position)
+          return {...p, position: L.latLng({ lat: pos.lat, lng: pos.lng})};
+        })
     },
     add: function (point) {
         const formData = new FormData();
         formData.append('name', point.name)
-        formData.append('position', point.position)
+        formData.append('position', JSON.stringify(point.position))
         formData.append('description', point.description)
-        let has_file = point.image.file? true: false;
+        let has_file = point.image_file && point.image_file.file? true: false;
         formData.append('has_file', has_file );
-        if (has_file)formData.append('file', point.image.file);
+        if (has_file)formData.append('file', point.image_file.file);
         formData.append('categoryId', point.categoryId)
         formData.append('categoryName', point.categoryName)
 
         return axios.post(
-            `${apiServer}/point/`,
+            `${apiServer}/point`,
             formData
         )
     },
@@ -28,9 +34,10 @@ export const poiAPI = {
         formData.append('name', point.name)
         formData.append('position', point.position)
         formData.append('description', point.description)
-        let has_file = point.image.file? true: false;
+        formData.append('image', point.image)
+        let has_file = point.image_file && point.image_file.file? true: false;
         formData.append('has_file', has_file );
-        if (has_file)formData.append('file', point.image.file);
+        if (has_file)formData.append('file', point.image_file.file);
         formData.append('categoryId', point.categoryId)
         formData.append('categoryName', point.categoryName)
 
