@@ -80,8 +80,6 @@ export async function adaptExternData() {
   let extern_categories = []
 
   let guido_points = await guidoAPI.getPoints()
-  console.log("debuguing")
-  console.log(guido_points.data)
   guido_points.data.forEach(p => {
       let extern_point = {
           _id: p.id,

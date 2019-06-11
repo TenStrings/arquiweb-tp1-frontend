@@ -30,7 +30,7 @@ export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
               </Form.Item>
               <Form.Item label="Imagen_archivo">
                  {getFieldDecorator('image_file', {
-                   rules: [{ required: true, message: 'Por favor ingrese una imagen'}],
+                   rules: [{ required:false }],
                  })(
                  <Upload beforeUpload={file => false}>
                    <Button>
@@ -40,7 +40,9 @@ export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
                    )}
               </Form.Item>
               <Form.Item label="Categoría">
-                 {getFieldDecorator('categoryName')(
+                 {getFieldDecorator('categoryName', {
+                   rules: [{ required: true, message: 'Por favor ingrese nombre de categoria' }],
+                 })(
                    <Select >
                      {categories.map(category => (
                        <Select.Option value={category.title} key={category.title}>

@@ -140,8 +140,7 @@ class BackofficeCategories extends Component {
       category => ({
         key: category._id,
         name: category.title,
-        icon: <Avatar
-        src= {category.icon} />,
+        icon: <Avatar src= {category.icon} />,
         visible:
           <Switch
             loading={loading[category._id]}
@@ -149,10 +148,10 @@ class BackofficeCategories extends Component {
             onChange={
               checked => this.onVisibilityChange(checked, category)}
           />,
-        edit: <Button type="primary" shape="circle" icon="edit"
+        edit: !category.extern && <Button type="primary" shape="circle" icon="edit"
                       onClick={() => this.showEditModal(category)}
               />,
-        delete: <Button type="danger" shape="circle" icon="delete"
+        delete: !category.extern && <Button type="danger" shape="circle" icon="delete"
                         onClick={() => this.onDelete(category)}
                 />
       })

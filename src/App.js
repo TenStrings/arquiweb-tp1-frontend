@@ -37,7 +37,7 @@ class App extends Component {
     this.loadOurPoints()
     this.loadOurCategories()
     this.loadOurSuggestions()
-    //this.loadExternData()
+    this.loadExternData()
   }
 
   loadOurPoints = () => {
@@ -104,6 +104,7 @@ class App extends Component {
   render() {
     const { points, categories, suggestions } = this.state;
     const visiblePoints = points.filter(p => p.visible)
+    const ourVisiblePoints = visiblePoints.filter(p => !p.extern)
     const visibleCategories = categories.filter(c => c.visible)
 
     return (
@@ -129,7 +130,7 @@ class App extends Component {
 
             <Route path="/backoffice_points" render={ props => (
                 <ContextBackofficePoints
-                  points={points}
+                  points={ourVisiblePoints}
                   categories={categories} //ver por q es necesario
                   notifyPointChange={this.onPointChange}
                 />
