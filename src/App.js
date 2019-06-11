@@ -38,12 +38,12 @@ class App extends Component {
     this.loadOurCategories()
     this.loadOurSuggestions()
     this.loadExternData()
-    /*setInterval(() => {
+    setInterval(() => {
       this.loadOurPoints()
       this.loadOurCategories()
       this.loadOurSuggestions()
       this.loadExternData()
-    }, 10000);*/
+    }, 20000);
   }
 
   loadOurPoints = () => {
@@ -115,7 +115,7 @@ class App extends Component {
     this.loadOurPoints()
     this.loadOurCategories()
   }
-  /*
+
   updateExternVisibily = (category) => {
     this.setState(prevState => {
       let the_category = prevState.categories.find(c => c._id === category._id )
@@ -129,7 +129,7 @@ class App extends Component {
           points: updated_points
       })
     })
-  }*/
+  }
 
   onNewSuggestion = () => {
     this.loadOurSuggestions()
@@ -183,6 +183,7 @@ class App extends Component {
                   key={categories}
                   categories={categories}
                   notifyCategoryChange={this.onCategoryChange}
+                  onExternVisibilyChange={this.updateExternVisibily}
                 />
             )}/>
 

@@ -46,7 +46,6 @@ export const poiAPI = {
         )
     },
     updateVisibility: function (point, token) {
-        alert("debuguing api.js")
         return axios.put(
             `${apiServer}/point/${point._id}/visibility`,
             {'visible':point.visible},
@@ -85,7 +84,6 @@ export const categoriesAPI = {
             formData, { headers: { "Authorization": `Bearer ${token}` } }
         )
     },
-
     updateVisibility: function (category, token) {
         return axios.put(
             `${apiServer}/category/${category._id}/visibility`,

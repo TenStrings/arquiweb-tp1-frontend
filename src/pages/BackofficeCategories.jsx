@@ -18,20 +18,18 @@ class BackofficeCategories extends Component {
 
   updateCategoryVisibility(category) {
     const { notifyCategoryChange } = this.props
-    return categoriesAPI
-      .updateVisibility(category)
-      .then(() => notifyCategoryChange())
-      /*
     if (!category.extern){
-
+      return categoriesAPI
+        .updateVisibility(category)
+        .then(() => notifyCategoryChange())
     }else {
-      return new Promise( resolve => {
+      return (new Promise( resolve => {
         setTimeout(
           function() {resolve(this.props.onExternVisibilyChange(category));},
           2000
         );
-      })
-    }*/
+      }))
+    }
   }
 
 //**************** Visibility Switch ****************//

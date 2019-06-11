@@ -94,7 +94,7 @@ export async function adaptExternData() {
           categoryName:p.category.name,
           visible: true,
           extern: true,
-          source: guido_API
+          source: guido_API_cors
       }
       extern_points.push(extern_point)
   })
@@ -111,7 +111,7 @@ export async function adaptExternData() {
           categoryName:p.category.name,
           visible: true,
           extern: true,
-          source: lucas_API
+          source: lucas_API_cors
       }
       extern_points.push(extern_point)
   })
@@ -125,7 +125,7 @@ export async function adaptExternData() {
               icon: c.icon,
               visible: true,
               extern: true,
-              source: guido_API
+              source: guido_API_cors
           }
           extern_categories.push(extern_category)
       }
@@ -140,7 +140,7 @@ export async function adaptExternData() {
               icon: c.logoUrl,
               visible: true,
               extern: true,
-              source: lucas_API
+              source: lucas_API_cors
           }
           extern_categories.push(extern_category)
       }
