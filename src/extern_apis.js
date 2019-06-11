@@ -94,7 +94,7 @@ export async function adaptExternData() {
           categoryName:p.category.name,
           visible: true,
           extern: true,
-          source: "https://pointerest-arq.herokuapp.com"
+          source: guido_API_cors
       }
       extern_points.push(extern_point)
   })
@@ -111,7 +111,7 @@ export async function adaptExternData() {
           categoryName:p.category.name,
           visible: true,
           extern: true,
-          source: "http://arq-web.herokuapp.com"
+          source: lucas_API_cors
       }
       extern_points.push(extern_point)
   })
@@ -125,7 +125,7 @@ export async function adaptExternData() {
               icon: c.icon,
               visible: true,
               extern: true,
-              source: "https://pointerest-arq.herokuapp.com"
+              source: guido_API_cors
           }
           extern_categories.push(extern_category)
       }
@@ -140,7 +140,7 @@ export async function adaptExternData() {
               icon: c.logoUrl,
               visible: true,
               extern: true,
-              source: "http://arq-web.herokuapp.com"
+              source: lucas_API_cors
           }
           extern_categories.push(extern_category)
       }
