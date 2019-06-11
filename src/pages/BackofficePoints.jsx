@@ -111,31 +111,31 @@ class BackofficePoints extends Component {
   render() {
     const columns = [
       {
-        title: 'Nombre', width: 200, dataIndex: 'name', fixed:'left',
+        title: 'Nombre', width: 200, dataIndex: 'name',
       },
       {
-        title: 'Descripción', width: 250, dataIndex: 'description',fixed:'left',
+        title: 'Descripción', width: 250, dataIndex: 'description',
       },
       {
-        title: 'Latitud', dataIndex: 'lat', width: 200,fixed:'left',
+        title: 'Latitud', dataIndex: 'lat', width: 200,
       },
       {
-        title: 'Longitud', dataIndex: 'lng', width: 200,fixed:'left',
+        title: 'Longitud', dataIndex: 'lng', width: 200,
       },
       {
-        title: 'Imagen', dataIndex: 'img', width: 50, fixed:'left',//button with card or popUp with image
+        title: 'Imagen', dataIndex: 'img', width: 50, //button with card or popUp with image
       },
       {
-        title: 'Categoría', dataIndex: 'cat', width: 200,fixed:'left',
+        title: 'Categoría', dataIndex: 'cat', width: 200,
       },
       {
-        title: 'Visible', dataIndex: 'visible', width: 50,fixed:'left', //button with card or popUp with image
+        title: 'Visible', dataIndex: 'visible', width: 50, //button with card or popUp with image
       },
       {
-        title: 'Editar', dataIndex: 'edit', width: 50,fixed:'left',
+        title: 'Editar', dataIndex: 'edit', width: 50,
       },
       {
-        title: 'Borrar', dataIndex: 'delete', width: 50,fixed:'left',
+        title: 'Borrar', dataIndex: 'delete', width: 50,
       }
     ];
 

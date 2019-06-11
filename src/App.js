@@ -49,7 +49,7 @@ class App extends Component {
   loadOurPoints = () => {
     poiAPI.get()
     .then(res => {
-      let our_points = res.map(p => ({...p, extern:false}))
+      let our_points = res.map(p => ({...p, extern:false, source: "local"}))
       this.setState( prevState => {
         let extern_points = prevState.points.filter(p => p.extern)
         return {points: our_points.concat(extern_points)}
@@ -60,7 +60,7 @@ class App extends Component {
   loadOurCategories = () => {
     categoriesAPI.get()
     .then(res => {
-      let our_categories = res.data.map(c => ({...c, extern:false}) )
+      let our_categories = res.data.map(c => ({...c, extern:false, source: "local"}) )
       this.setState( prevState => {
         let extern_categories = prevState.categories.filter(c => c.extern)
         return {categories: our_categories.concat(extern_categories)}

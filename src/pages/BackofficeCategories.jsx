@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Switch, message } from 'antd';
+import { Table, Button, Switch, message, Icon } from 'antd';
 import { CategoryEditForm } from '../components/CategoryModal';
 import { categoriesAPI } from '../api';
 import { Avatar } from 'antd';
@@ -126,33 +126,47 @@ class BackofficeCategories extends Component {
         title: 'Visible', dataIndex: 'visible', width: 50, //button with card or popUp with image
       },
       {
+        title: 'Origen', dataIndex: 'source', width: 50,
+      },
+      {
         title: 'Editar', dataIndex: 'edit', width: 50,
       },
       {
         title: 'Borrar', dataIndex: 'delete', width: 50,
       }
+
     ];
     const { loading } = this.state;
     const { categories } = this.props;
     const data = categories.map(
-      category => ({
-        key: category._id,
-        name: category.title,
-        icon: <Avatar src= {category.icon} />,
-        visible:
-          <Switch
-            loading={loading[category._id]}
-            defaultChecked={category.visible}
-            onChange={
-              checked => this.onVisibilityChange(checked, category)}
-          />,
-        edit: !category.extern && <Button type="primary" shape="circle" icon="edit"
-                      onClick={() => this.showEditModal(category)}
-              />,
-        delete: !category.extern && <Button type="danger" shape="circle" icon="delete"
-                        onClick={() => this.onDelete(category)}
-                />
-      })
+      category => {
+        let source = null
+        if(category.source === "local"){
+          source = "Local"
+        }else {
+          source = <Button type="primary" shape="circle" icon="info-circle" href={category.source} target="_blank" />
+        }
+
+        return  ({
+          key: category._id,
+          name: category.title,
+          icon: <Avatar src= {category.icon} />,
+          visible:
+            <Switch
+              loading={loading[category._id]}
+              defaultChecked={category.visible}
+              onChange={
+                checked => this.onVisibilityChange(checked, category)}
+            />,
+          source: source,            
+          edit: !category.extern && <Button type="primary" shape="circle" icon="edit"
+                        onClick={() => this.showEditModal(category)}
+                />,
+          delete: !category.extern && <Button type="danger" shape="circle" icon="delete"
+                          onClick={() => this.onDelete(category)}
+                  />
+        })
+      }
     )
 
     const modalConfirmLoading = this.state.modal && this.state.modal.confirmLoading

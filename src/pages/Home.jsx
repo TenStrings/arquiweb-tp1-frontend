@@ -27,28 +27,38 @@ class Home extends Component {
     const { points } = this.props
     const { nameFilter, categoryFilter } = this.state
     const filteredPoints = nameFilter(categoryFilter(points))
-    return filteredPoints.map(point => ({
-      position: point.position,
-      popUpContent: (<div>
-                     <Card
-                       style={{ width: 300 }}
-                       cover={
-                         <img
-                           alt="Loading"
-                           src={point.image}
-                         />
-                       }
-                     >
-                       <Meta
-                         avatar={<Avatar src= {point.image} />}
-                         title={point.name}
-                         description={point.description}
-                       />
-                     </Card>
+    return filteredPoints.map(point => {
+        let source = null
+        if(point.source === "local"){
+          source = "Origen: Local"
+        }else {
+          source = <a href={point.source} target="_blank">Origen: Externo</a>
+        }
 
-                     </div>),
-      key: point.name,
-    }))
+        return ({
+            position: point.position,
+            popUpContent: (<div>
+                           <Card
+                             style={{ width: 300 }}
+                             cover={
+                               <img
+                                 alt="Loading"
+                                 src={point.image}
+                               />
+                             }
+                             actions={[source]}
+                           >
+                             <Meta
+                               avatar={<Avatar src= {point.image} />}
+                               title={point.name}
+                               description={point.description + "\n" + source}
+                             />
+                           </Card>
+
+                           </div>),
+            key: point.name,
+       })
+    })
   }
 
   // ***** Children events ***** //
