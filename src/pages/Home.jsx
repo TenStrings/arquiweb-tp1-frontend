@@ -98,7 +98,7 @@ class Home extends Component {
       }
 
       //solo agregamos puntos de categorias locales
-      const categoryId = this.props.categories.find( c =>{ return values.categoryName === c.name})._id
+      const categoryId = this.props.categories.find( c =>{ return values.categoryName === c.title})._id
       const newPoint = {...values, 'categoryId':categoryId };
       const promise = poiAPI.add(newPoint)
       promise
@@ -122,6 +122,7 @@ class Home extends Component {
 
   render() {
     const { points, categories } = this.props
+    const ourCategories = categories.filter(c => !c.extern)
     const modalConfirmLoading = this.state.modal && this.state.modal.confirmLoading
 
     const card_header_style = {backgroundColor: 'royalblue', color:'white'}
@@ -177,7 +178,7 @@ class Home extends Component {
           onCancel={this.handleAddPointCancel}
           onConfirm={this.handleAddPointConfirm}
           confirmLoading={modalConfirmLoading}
-          categories={categories}
+          categories={ourCategories}
         />
         <Row id="Mapa">
           <Col>
