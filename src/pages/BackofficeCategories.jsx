@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Switch, message, Icon } from 'antd';
+import { Table, Button, Switch, message } from 'antd';
 import { CategoryEditForm } from '../components/CategoryModal';
 import { categoriesAPI } from '../api';
 import { Avatar } from 'antd';
@@ -9,16 +9,27 @@ class BackofficeCategories extends Component {
 
   updateCategory(category) {
     const { notifyCategoryChange } = this.props
+    console.log(category.extern)
     return categoriesAPI
       .update(category)
       .then(() => notifyCategoryChange())
+
   }
 
   updateCategoryVisibility(category) {
     const { notifyCategoryChange } = this.props
-    return categoriesAPI
-      .updateVisibility(category)
-      .then(() => notifyCategoryChange())
+    if (!category.extern){
+      return categoriesAPI
+        .updateVisibility(category)
+        .then(() => notifyCategoryChange())
+    }else {
+      return new Promise( resolve => {
+        setTimeout(
+          function() {resolve(this.props.onExternVisibilyChange(category));},
+          2000
+        );
+      })
+    }
   }
 
 //**************** Visibility Switch ****************//
@@ -158,7 +169,7 @@ class BackofficeCategories extends Component {
               onChange={
                 checked => this.onVisibilityChange(checked, category)}
             />,
-          source: source,            
+          source: source,
           edit: !category.extern && <Button type="primary" shape="circle" icon="edit"
                         onClick={() => this.showEditModal(category)}
                 />,

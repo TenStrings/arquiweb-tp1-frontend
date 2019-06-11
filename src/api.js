@@ -1,5 +1,5 @@
 import axios from 'axios';
-import L from 'leaflet'
+//import L from 'leaflet'
 
 const apiServer = process.env.REACT_APP_HEROKU ?
     "https://jugo-maps-api.herokuapp.com" : "http://localhost:4000"
@@ -7,22 +7,21 @@ const apiServer = process.env.REACT_APP_HEROKU ?
 export const poiAPI = {
     get: async function () {
         let points = (await axios.get(`${apiServer}/point`)).data;
-        return points.map(p => {
-          let pos = JSON.parse(p.position)
-          return {...p, position: L.latLng({ lat: pos.lat, lng: pos.lng})};
-        })
+        return points
     },
     add: function (point) {
         const formData = new FormData();
         formData.append('name', point.name)
-        formData.append('position', JSON.stringify(point.position))
+        //formData.append('position', JSON.stringify(point.position))
+        formData.append('positionLat', point.position.lat)
+        formData.append('positionLng', point.position.lng)
         formData.append('description', point.description)
         let has_file = point.image_file && point.image_file.file? true: false;
         formData.append('has_file', has_file );
         if (has_file)formData.append('file', point.image_file.file);
         formData.append('categoryId', point.categoryId)
         formData.append('categoryName', point.categoryName)
-
+        console.log(formData.position)
         return axios.post(
             `${apiServer}/point`,
             formData

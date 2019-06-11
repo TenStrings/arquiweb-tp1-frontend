@@ -38,12 +38,12 @@ class App extends Component {
     this.loadOurCategories()
     this.loadOurSuggestions()
     this.loadExternData()
-    /*setInterval(() => {
+    setInterval(() => {
       this.loadOurPoints()
       this.loadOurCategories()
       this.loadOurSuggestions()
       this.loadExternData()
-    }, 20000);*/
+    }, 10000);
   }
 
   loadOurPoints = () => {
@@ -77,13 +77,32 @@ class App extends Component {
     })
   }
 
-  //TODO HACER REFRESH DEL EXTERN DATA CADA X SEGUNDOS
   loadExternData = async() => {
     let extern = await adaptExternData()
-    this.setState(prevState => ({
-      points: prevState.points.concat(extern.points),
-      categories: prevState.categories.concat(extern.categories)
-    }));
+    this.setState(prevState => {
+      let our_categories = prevState.categories.filter(c => !c.extern)
+      let our_points = prevState.points.filter(p => !p.extern)
+      let extern_categories = extern.categories.map( c => {
+        const we_have_this_cat = prevState.categories.find(cat => cat._id === c.id)
+        if (we_have_this_cat) {
+          return ({...c, visible:we_have_this_cat.visible})
+        }else{
+          return c
+        }
+      })
+      let extern_points = extern.points.map( p => {
+        const we_have_this_cat = prevState.categories.find(cat => cat._id === p.categoryId)
+        if (we_have_this_cat) {
+          return ({...p, visible:we_have_this_cat.visible})
+        }else{
+          return p
+        }
+      })
+      return ({
+      points: our_points.concat(extern_points),
+      categories: our_categories.concat(extern_categories)
+      })
+    })
   }
 
 
@@ -95,6 +114,21 @@ class App extends Component {
   onCategoryChange = () => {
     this.loadOurPoints()
     this.loadOurCategories()
+  }
+
+  updateExternVisibily = (category) => {
+    this.setState(prevState => {
+      let the_category = prevState.categories.find(c => c._id === category._id )
+      let index = prevState.categories.indexOf(the_category);
+      let updated_categories = Object.assign([], prevState.categories)
+      updated_categories[index] = category
+      let updated_points = Object.assign([], prevState.points)
+      updated_points = updated_points.map(p=> ({...p, visible:category.visible}))
+      return ({
+          categories:updated_categories,
+          points: updated_points
+      })
+    })
   }
 
   onNewSuggestion = () => {
@@ -148,6 +182,7 @@ class App extends Component {
                 <ContextBackofficeCategories
                   key={categories}
                   categories={categories}
+                  onExternVisibilyChange={this.updateExternVisibility}
                   notifyCategoryChange={this.onCategoryChange}
                 />
             )}/>

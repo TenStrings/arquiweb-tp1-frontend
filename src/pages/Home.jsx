@@ -36,6 +36,7 @@ class Home extends Component {
         }
 
         return ({
+            key: point._id,
             position: point.position,
             popUpContent: (<div>
                            <Card
@@ -51,7 +52,7 @@ class Home extends Component {
                              <Meta
                                avatar={<Avatar src= {point.image} />}
                                title={point.name}
-                               description={point.description + "\n" + source}
+                               description={point.description}
                              />
                            </Card>
 
