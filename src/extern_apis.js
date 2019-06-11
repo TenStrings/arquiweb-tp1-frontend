@@ -1,13 +1,15 @@
 import axios from 'axios';
 
-const guido_API = "https://cors.io/?https://pointerest-arq.herokuapp.com"
+const cors_proxy = "https://cors.io/?"
+const guido_API = "https://pointerest-arq.herokuapp.com"
+const guido_API_cors = cors_proxy + guido_API
 
 export const guidoAPI = {
     getPoints: function () {
-        return axios.get(`${guido_API}/points.json`);
+        return axios.get(`${guido_API_cors}/points.json`);
     },
     getCategories: function () {
-        return axios.get(`${guido_API}/categories.json`);
+        return axios.get(`${guido_API_cors}/categories.json`);
     }
 }
 
@@ -32,20 +34,21 @@ export const guidoAPI = {
   "source":"local",
   "url":"https://pointerest-arq.herokuapp.com/points/8.json"}
 */
-const lucas_API = "https://cors.io/?http://arq-web.herokuapp.com"
+const lucas_API = "http://arq-web.herokuapp.com"
+const lucas_API_cors = cors_proxy + lucas_API
 
 export const lucasAPI = {
     getPoints: function () {
-        return axios.get(`${lucas_API}/api/points?categories=&title=`);
+        return axios.get(`${lucas_API_cors}/api/points?categories=&title=`);
     },
     getCategories: function() {
-        return axios.get(`${lucas_API}/api/categories?hidden=false&state=APPROVED`)
+        return axios.get(`${lucas_API_cors}/api/categories?hidden=false&state=APPROVED`)
     },
     getPointImage: function(pointId) {
-      return axios.get(`${lucas_API}/api/points/${pointId}/image`);
+      return axios.get(`${lucas_API_cors}/api/points/${pointId}/image`);
     },
     getCategoryIcon: function(categoryId) {
-      return axios.get(`${lucas_API}/api/categories/${categoryId}/image`);
+      return axios.get(`${lucas_API_cors}/api/categories/${categoryId}/image`);
     }
 }
 
@@ -108,7 +111,6 @@ export async function adaptExternData() {
           visible: true,
           extern: true
       }
-      console.log(extern_point.image)
       extern_points.push(extern_point)
   })
 

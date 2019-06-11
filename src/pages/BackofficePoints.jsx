@@ -74,7 +74,7 @@ class BackofficePoints extends Component {
       if (err) {
         return;
       }
-      const categoryId = this.props.categories.find( c =>{ return values.categoryName === c.name})._id
+      const categoryId = this.props.categories.find( c =>{ return values.categoryName === c.title})._id
       const updatedPoint = {...this.state.modal, ...values, 'categoryId':categoryId };
 
       //TODO: Probablemente esto debería ser una promise
@@ -149,8 +149,7 @@ class BackofficePoints extends Component {
         lat: point.position.lat,
         lng: point.position.lng,
         description: point.description,
-        img: <Avatar
-        src= { point.image } />,
+        img: <Avatar src= { point.image } />,
         cat: point.categoryName,
         visible: <Switch loading={loading[point._id]} defaultChecked={point.visible}
                          onChange={checked => this.onVisibilityChange(checked, point)}

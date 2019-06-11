@@ -37,23 +37,34 @@ class App extends Component {
     this.loadOurPoints()
     this.loadOurCategories()
     this.loadOurSuggestions()
-    //this.loadExternData()
+    this.loadExternData()
+    /*setInterval(() => {
+      this.loadOurPoints()
+      this.loadOurCategories()
+      this.loadOurSuggestions()
+      this.loadExternData()
+    }, 20000);*/
   }
 
   loadOurPoints = () => {
     poiAPI.get()
     .then(res => {
       let our_points = res.map(p => ({...p, extern:false}))
-      this.setState({ points: our_points });
+      this.setState( prevState => {
+        let extern_points = prevState.points.filter(p => p.extern)
+        return {points: our_points.concat(extern_points)}
+      });;
     });
   }
 
   loadOurCategories = () => {
     categoriesAPI.get()
     .then(res => {
-      let our_categories = []
-      res.data.map(c => our_categories.push({...c, extern:false}))
-      this.setState({ categories: our_categories });
+      let our_categories = res.data.map(c => ({...c, extern:false}) )
+      this.setState( prevState => {
+        let extern_categories = prevState.categories.filter(c => c.extern)
+        return {categories: our_categories.concat(extern_categories)}
+      });
     })
   }
 
@@ -61,7 +72,7 @@ class App extends Component {
     suggestionsAPI.get()
     .then(res => {
       let our_suggestions = []
-      res.data.map(s => our_suggestions.push({...s, extern:false}))
+      res.data.forEach(s => our_suggestions.push({...s, extern:false}))
       this.setState({ suggestions: our_suggestions });
     })
   }
@@ -69,8 +80,6 @@ class App extends Component {
   //TODO HACER REFRESH DEL EXTERN DATA CADA X SEGUNDOS
   loadExternData = async() => {
     let extern = await adaptExternData()
-    console.log("extern data")
-    console.log(extern)
     this.setState(prevState => ({
       points: prevState.points.concat(extern.points),
       categories: prevState.categories.concat(extern.categories)
@@ -104,9 +113,8 @@ class App extends Component {
   render() {
     const { points, categories, suggestions } = this.state;
     const visiblePoints = points.filter(p => p.visible)
-    const ourVisiblePoints = visiblePoints.filter(p => !p.extern)
+    const ourPoints = points.filter(p => !p.extern)
     const visibleCategories = categories.filter(c => c.visible)
-    console.log(ourVisiblePoints)
     return (
       <UserProvider>
         <Router>
@@ -130,7 +138,7 @@ class App extends Component {
 
             <Route path="/backoffice_points" render={ props => (
                 <ContextBackofficePoints
-                  points={ourVisiblePoints}
+                  points={ourPoints}
                   categories={categories} //ver por q es necesario
                   notifyPointChange={this.onPointChange}
                 />

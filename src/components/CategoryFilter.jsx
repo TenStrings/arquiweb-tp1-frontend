@@ -5,15 +5,15 @@ const CheckableTag = Tag.CheckableTag;
 
 class CategoryFilter extends React.Component {
     state = {
-        selected_categories: new Set(this.props.categories.map(c => c.title))
+        selected_categories: new Set(this.props.categories.map(c => c._id))
     };
 
-    onTagChangeDo(category_name, checked) {
+    onTagChangeDo(categoryId, checked) {
         this.setState(state => {
             const { selected_categories } = state
             const new_categories = new Set(selected_categories)
-            if (checked) new_categories.add(category_name)
-            else new_categories.delete(category_name)
+            if (checked) new_categories.add(categoryId)
+            else new_categories.delete(categoryId)
             return { selected_categories: new_categories }
         },
             this.notifyChange);
@@ -25,8 +25,7 @@ class CategoryFilter extends React.Component {
 
     filterPoints = points => {
         const { selected_categories } = this.state;
-        return points.filter(point => selected_categories.has(point.categoryName)
-        )
+        return points.filter(point => selected_categories.has(point.categoryId))
     }
 
     render() {
@@ -36,10 +35,9 @@ class CategoryFilter extends React.Component {
                 {
                     this.props.categories.map(category => (
                         <CheckableTag
-                            key={category.title}
-                            checked={selected_categories.has(category.title)}
-                            onChange={checked => this.onTagChangeDo(category.title,
-                                checked)}
+                            key={category._id}
+                            checked={selected_categories.has(category._id)}
+                            onChange={checked => this.onTagChangeDo(category._id, checked)}
                         >
                             {category.title}
                         </CheckableTag >

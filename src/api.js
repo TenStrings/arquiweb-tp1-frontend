@@ -7,7 +7,6 @@ const apiServer = process.env.REACT_APP_HEROKU ?
 export const poiAPI = {
     get: async function () {
         let points = (await axios.get(`${apiServer}/point`)).data;
-        console.log(points)
         return points.map(p => {
           let pos = JSON.parse(p.position)
           return {...p, position: L.latLng({ lat: pos.lat, lng: pos.lng})};
@@ -48,6 +47,7 @@ export const poiAPI = {
         )
     },
     updateVisibility: function (point, token) {
+        alert("debuguing api.js")
         return axios.put(
             `${apiServer}/point/${point._id}/visibility`,
             {'visible':point.visible},
