@@ -32,7 +32,7 @@ class Home extends Component {
         const source = <a href={point.source} target="_blank">Origen: {source_desc}</a>
 
         return ({
-            key: point._id + point.hostname,
+            key: point._id,
             position: point.position,
             popUpContent: (<div>
                            <Card
@@ -82,9 +82,7 @@ class Home extends Component {
     form.setFieldsValue(
       { position: position },
       () => this.setState( prevState => ({
-        modal: {
-          position: position
-        },
+        modal: {position: position},
         newPoint: !prevState.newPoint,
       }))
     )
@@ -180,7 +178,6 @@ class Home extends Component {
     return (
       <div className="App">
         <PointAddForm
-          key={this.state.newPoint}
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
           onCancel={this.handleAddPointCancel}
