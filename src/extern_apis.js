@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const cors_proxy = "https://cors.io/?"
+const cors_proxy = "https://cors-by-nice-subject.herokuapp.com/" //deployed our private instance of proxy
 const guido_API = "https://pointerest-arq.herokuapp.com"
 const guido_API_cors = cors_proxy + guido_API
 
@@ -89,12 +89,12 @@ export async function adaptExternData() {
           position: {'lat':p.lat,'lng':p.long},
           name: p.name,
           description: p.description,
-          image:p.img,
+          image: p.img,
           categoryId:p.category.id,
           categoryName:p.category.name,
           visible: true,
           extern: true,
-          source: guido_API_cors
+          source: guido_API
       }
       extern_points.push(extern_point)
   })
@@ -111,7 +111,7 @@ export async function adaptExternData() {
           categoryName:p.category.name,
           visible: true,
           extern: true,
-          source: lucas_API_cors
+          source: lucas_API
       }
       extern_points.push(extern_point)
   })
@@ -125,7 +125,7 @@ export async function adaptExternData() {
               icon: c.icon,
               visible: true,
               extern: true,
-              source: guido_API_cors
+              source: guido_API
           }
           extern_categories.push(extern_category)
       }
@@ -140,7 +140,7 @@ export async function adaptExternData() {
               icon: c.logoUrl,
               visible: true,
               extern: true,
-              source: lucas_API_cors
+              source: lucas_API
           }
           extern_categories.push(extern_category)
       }
