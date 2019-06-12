@@ -28,12 +28,8 @@ class Home extends Component {
     const { nameFilter, categoryFilter } = this.state
     const filteredPoints = nameFilter(categoryFilter(points))
     return filteredPoints.map(point => {
-        let source = null
-        if(point.source === "local"){
-          source = "Origen: Local"
-        }else {
-          source = <a href={point.source} target="_blank">Origen: Externo</a>
-        }
+        let source_desc = point.hostname === "jugo-maps.herokuapp.com"? "Local": "Externo"
+        const source = <a href={point.source} target="_blank">Origen: {source_desc}</a>
 
         return ({
             key: point._id,
@@ -57,7 +53,6 @@ class Home extends Component {
                            </Card>
 
                            </div>),
-            key: point.name,
        })
     })
   }
@@ -86,11 +81,12 @@ class Home extends Component {
     const form = this.formRef.props.form;
     form.setFieldsValue(
       { position: position },
-      () => this.setState({
+      () => this.setState( prevState => ({
         modal: {
           position: position
-        }
-      })
+        },
+        newPoint: !prevState.newPoint,
+      }))
     )
   }
 
@@ -184,6 +180,7 @@ class Home extends Component {
     return (
       <div className="App">
         <PointAddForm
+          key={this.state.newPoint}
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
           onCancel={this.handleAddPointCancel}

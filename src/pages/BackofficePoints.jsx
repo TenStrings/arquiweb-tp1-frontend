@@ -53,7 +53,10 @@ class BackofficePoints extends Component {
         description: point.description,
         categoryName:point.categoryName,
       },
-      () => {this.setState({ modal: point})}
+      () => {this.setState( prevState => ({
+         modal: point,
+         refresh_edition_key: !prevState.refresh_edition_key,
+      }))}
     )
   }
 
@@ -111,31 +114,68 @@ class BackofficePoints extends Component {
   render() {
     const columns = [
       {
-        title: 'Nombre', width: 200, dataIndex: 'name',
+        title: 'Nombre',
+        dataIndex: 'name',
       },
       {
-        title: 'Descripción', width: 250, dataIndex: 'description',
+        title: 'Descripción',
+        dataIndex: 'description',
       },
       {
-        title: 'Latitud', dataIndex: 'lat', width: 200,
+        title: 'Latitud',
+        dataIndex: 'lat',
       },
       {
-        title: 'Longitud', dataIndex: 'lng', width: 200,
+        title: 'Longitud',
+        dataIndex: 'lng',
       },
       {
-        title: 'Imagen', dataIndex: 'img', width: 50, //button with card or popUp with image
+        title: 'Categoría',
+        dataIndex: 'cat',
       },
       {
-        title: 'Categoría', dataIndex: 'cat', width: 200,
+        title: 'Imagen',
+        dataIndex: 'img',
+        render: image_link => (<Avatar src= { image_link} />)
       },
       {
-        title: 'Visible', dataIndex: 'visible', width: 50, //button with card or popUp with image
+        title: 'Visible',
+        dataIndex: 'visible',
+        render: point => (<Switch
+                            loading={loading[point._id]}
+                            defaultChecked={point.visible}
+                            onChange={checked => this.onVisibilityChange(checked, point)}
+                          />)
       },
       {
-        title: 'Editar', dataIndex: 'edit', width: 50,
+        title: 'Origen',
+        dataIndex: 'source',
+        render: point => (<a
+                            href={point.source}
+                            target="_blank"
+                          >
+                          {point.hostname}
+                          </a>)
       },
       {
-        title: 'Borrar', dataIndex: 'delete', width: 50,
+        title: 'Editar',
+        dataIndex: 'edit',
+        render: point => (<Button
+                            type="primary"
+                            shape="circle"
+                            icon="edit"
+                            onClick={ () => this.showEditModal(point)}
+                          />)
+      },
+      {
+        title: 'Borrar',
+        dataIndex: 'delete',
+        render: point => (<Button
+                            type="danger"
+                            shape="circle"
+                            icon="delete"
+                            onClick={ () => this.onDelete(point)}
+                          />)
       }
     ];
 
@@ -146,20 +186,15 @@ class BackofficePoints extends Component {
       point => ({
         key: point._id,
         name: point.name,
-        lat: point.position.lat,
-        lng: point.position.lng,
+        lat: parseFloat(point.position.lat).toFixed(2).toString(),
+        lng: parseFloat(point.position.lng).toFixed(2).toString(),
         description: point.description,
-        img: <Avatar src= { point.image } />,
         cat: point.categoryName,
-        visible: <Switch loading={loading[point._id]} defaultChecked={point.visible}
-                         onChange={checked => this.onVisibilityChange(checked, point)}
-                 />,
-        edit: <Button type="primary" shape="circle" icon="edit"
-                      onClick={ () => this.showEditModal(point)}
-              />,
-        delete: <Button type="danger" shape="circle" icon="delete"
-                        onClick={ () => this.onDelete(point)}
-                />
+        img: point.image,
+        visible: point,
+        source: point,
+        edit: point,
+        delete: point,
       })
     )
 
@@ -167,6 +202,7 @@ class BackofficePoints extends Component {
       <React.Fragment>
         <Table columns={columns} dataSource={data} scroll={{ y: 600 }} />
         <PointEditForm
+          key={this.state.refresh_edition_key}
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
           onCancel={this.onEditCancel}

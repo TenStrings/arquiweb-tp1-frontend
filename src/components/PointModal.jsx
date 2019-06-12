@@ -91,7 +91,9 @@ export const PointAddForm = Form.create({ name: 'add_point_in_modal' })(
              }
             </Form.Item>
             <Form.Item label="Categoría">
-              {getFieldDecorator('categoryName')(
+              {getFieldDecorator('categoryName', {
+                rules: [{ required: true, message: 'Por favor ingrese nombre de categoria' }],
+              })(
                 <Select>
                   {categories.map(category => (
                     <Select.Option value={category.title} key={category.title}>

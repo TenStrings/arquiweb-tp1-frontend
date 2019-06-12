@@ -58,12 +58,13 @@ class BackofficeCategories extends Component {
   showEditModal = category => {
     const form = this.formRef.props.form;
     form.setFieldsValue({ title: category.title }, () =>
-      this.setState({
+      this.setState(prevState => ({
         modal: {
           category: category,
           confirmLoading: false
-        }
-      })
+        },
+        refresh_edition_key: !prevState.refresh_edition_key,
+      }))
     )
   }
 
@@ -151,13 +152,6 @@ class BackofficeCategories extends Component {
     const { categories } = this.props;
     const data = categories.map(
       category => {
-        let source = null
-        if(category.source === "local"){
-          source = "Local"
-        }else {
-          source = <Button type="primary" shape="circle" icon="info-circle" href={category.source} target="_blank" />
-        }
-
         return  ({
           key: category._id,
           name: category.title,
@@ -169,7 +163,7 @@ class BackofficeCategories extends Component {
               onChange={
                 checked => this.onVisibilityChange(checked, category)}
             />,
-          source: source,
+          source: <a href={category.source}  target="_blank">{category.hostname}</a>,
           edit: !category.extern && <Button type="primary" shape="circle" icon="edit"
                         onClick={() => this.showEditModal(category)}
                 />,
@@ -185,6 +179,7 @@ class BackofficeCategories extends Component {
       <React.Fragment>
         <Table columns={columns} dataSource={data} scroll={{ y: 600 }} />;
         <CategoryEditForm
+          key={this.state.refresh_edition_key}
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
           onCancel={this.onEditCancel}
