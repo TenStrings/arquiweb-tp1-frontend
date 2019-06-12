@@ -32,7 +32,7 @@ class Home extends Component {
         const source = <a href={point.source} target="_blank">Origen: {source_desc}</a>
 
         return ({
-            key: point._id,
+            key: point._id + point.hostname,
             position: point.position,
             popUpContent: (<div>
                            <Card
