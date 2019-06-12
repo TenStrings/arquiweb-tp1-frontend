@@ -137,7 +137,7 @@ export async function adaptExternData() {
           let extern_category = {
               _id: c.id,
               title: c.name,
-              icon: c.logoUrl,
+              icon: lucas_API + c.logoUrl,
               visible: true,
               extern: true,
               source: lucas_API
