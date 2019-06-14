@@ -11,7 +11,7 @@ class NormalLoginForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-         if(values.username ==='admin' && values.password==='admin')this.props.userContext.login(values.username, values.password)
+        this.props.userContext.login(values.username, values.password)
         this.props.notifyLogIn()
         this.props.history.push("/");
       }

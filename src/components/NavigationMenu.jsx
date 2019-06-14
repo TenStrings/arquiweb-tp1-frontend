@@ -150,7 +150,7 @@ class NavigationMenu extends Component {
                   Mapa
                 </Link>
               </Menu.Item>
-              {(user || this.props.mockedUser) &&
+              {user &&
               <Menu.Item key="suggest_category">
                   <Icon type="tags" />
                   Sugerir categoría
@@ -190,7 +190,7 @@ class NavigationMenu extends Component {
             }
 
             {
-              (user || this.props.mockedUser) &&
+              user &&
               (
                 <Menu.Item key="logout">
                   <Icon type="logout" />Logout
@@ -198,7 +198,7 @@ class NavigationMenu extends Component {
               )
             }
             {
-              (!user && !this.props.mockedUser) &&
+              !user &&
               (
                 <Menu.Item key="login">
                   <Link to="/login">
@@ -208,7 +208,7 @@ class NavigationMenu extends Component {
               )
             }
             {
-              (!user && !this.props.mockedUser) &&
+              !user &&
               (
                 <Menu.Item key="signUp">
                   <Link to="/register">

@@ -1,5 +1,4 @@
 import React from 'react';
-import {message} from 'antd';
 import {
   Form, Icon, Input, Button,
 } from 'antd';
@@ -11,8 +10,8 @@ class RegisterForm extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        //this.props.userContext.register(values.username, values.password)
-        message.success("Usuario registrado correctamente.") //ponele
+        this.props.userContext.register(values.username, values.password)
+        this.props.history.push("/");
       }
     });
   }
