@@ -8,6 +8,9 @@ export const poiAPI = {
     get: async function () {
         return (await axios.get(`${apiServer}/point`)).data;
     },
+    get_extern: async function () {
+        return (await axios.get(`${apiServer}/point/extern`)).data;
+    },
     add: function (point) {
         const formData = new FormData();
         formData.append('name', point.name)
@@ -62,6 +65,9 @@ export const poiAPI = {
 export const categoriesAPI = {
     get: async function () {
         return (await axios.get(`${apiServer}/category`)).data;
+    },
+    get_extern: async function () {
+        return (await axios.get(`${apiServer}/category/extern`)).data;
     },
     add: function (category, token) {  //the file was uploaded in the suggestion and we only add categories that were a suggestion
         return axios.post(

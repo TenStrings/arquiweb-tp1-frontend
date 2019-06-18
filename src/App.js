@@ -42,17 +42,17 @@ class App extends Component {
     }, 20000);
   }
 
-  loadPoints = () => {
-    poiAPI.get()
-    .then(res => {
-      this.setState({ points: res });
+  loadPoints = async () => {
+    const intern_points = await poiAPI.get()
+    poiAPI.get_extern().then(res => {
+      this.setState({ points: intern_points.concat(res) });
     });
   }
 
-  loadCategories = () => {
-    categoriesAPI.get()
-    .then(res => {
-      this.setState({ categories: res });
+  loadCategories = async () => {
+    const intern_categories = await categoriesAPI.get()
+    categoriesAPI.get_extern().then(res => {
+      this.setState({ categories: intern_categories.concat(res) });
     })
   }
 
