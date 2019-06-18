@@ -1,3 +1,6 @@
+
+//This code is not running any more, we manage this in backend now.
+/*
 import axios from 'axios';
 
 const cors_proxy = "https://cors-by-nice-subject.herokuapp.com/" //deployed our private instance of proxy
@@ -110,3 +113,4 @@ export async function adaptExternData() {
           'points': extern_points
   })
 }
+*/

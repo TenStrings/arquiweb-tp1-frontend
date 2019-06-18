@@ -89,7 +89,21 @@ export const categoriesAPI = {
             { headers: { "Authorization": `Bearer ${token}` } }
         )
     },
-
+    updateExternVisibility: function (category, token) {
+        if (category.visible){
+          return axios.delete(
+              `${apiServer}/category/extern/${category.provider.cat_abs_id}`,
+              {'title':category.title},
+              { headers: { "Authorization": `Bearer ${token}` } }
+          )
+        }else {
+          return axios.post(
+              `${apiServer}/category/extern/${category.provider.cat_abs_id}`,
+              {'title':category.title},
+              { headers: { "Authorization": `Bearer ${token}` } }
+          )
+        }
+    },
     delete: function (category, token) {
         return axios.delete(
             `${apiServer}/category/${category._id}`,

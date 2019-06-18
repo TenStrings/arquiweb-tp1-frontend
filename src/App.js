@@ -36,10 +36,10 @@ class App extends Component {
     this.loadPoints()
     this.loadCategories()
     this.loadSuggestions()
-    /*setInterval(() => {
+    setInterval(() => {
       this.loadPoints()
       this.loadCategories()
-    }, 20000);*/
+    }, 20000);
   }
 
   loadPoints = () => {
@@ -64,40 +64,20 @@ class App extends Component {
   }
 
   //**** Data reloading triggers  ****/
-  //TODO just reload by id instead of everything
   onPointChange = () => {
     this.loadPoints()
     this.loadCategories()
   }
 
-  //TODO Just reload the modified category and points of that category
   onCategoryChange = () => {
     this.loadPoints()
     this.loadCategories()
   }
 
-  //TODO this should add or remove the category from hidden_external_categories table in backend
-  updateExternVisibility = (category) => {
-    this.setState(prevState => {
-      let the_category = prevState.categories.find(c => c._id === category._id)
-      let index = prevState.categories.indexOf(the_category);
-      let updated_categories = Object.assign([], prevState.categories)
-      updated_categories[index] = category
-      let updated_points = Object.assign([], prevState.points)
-      updated_points = updated_points.map(p => ({ ...p, visible: category.visible }))
-      return ({
-        categories: updated_categories,
-        points: updated_points
-      })
-    })
-  }
-
-  //TODO get only the new one by name
   onNewSuggestion = () => {
     this.loadSuggestions()
   }
 
-  //TODO get only the new category by name
   onSuggestionSolved = was_accepted => {
     this.loadSuggestions()
     if (was_accepted) this.loadCategories()
@@ -145,7 +125,6 @@ class App extends Component {
                   key={categories}
                   categories={categories}
                   notifyCategoryChange={this.onCategoryChange}
-                  onExternVisibilyChange={this.updateExternVisibility}
                 />
             )}/>
 
