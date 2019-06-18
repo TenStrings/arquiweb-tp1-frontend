@@ -135,6 +135,7 @@ class NavigationMenu extends Component {
             onCancel={this.onSuggestionCancel}
             confirmLoading={modalConfirmLoading}
             categories={this.props.categories}
+            suggestions={this.props.suggestions}
           />
           <Menu
             onClick={this.handleClick}

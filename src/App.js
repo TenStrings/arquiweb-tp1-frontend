@@ -98,7 +98,8 @@ class App extends Component {
         <Router>
 
           <AuthenticatedNavigationMenu
-            categories={categories}
+            categories={ourCategories}
+            suggestions={suggestions}
             notifyLogOut={this.onLogOut}
             notifyNewSuggestion={this.onNewSuggestion}
           />

@@ -15,7 +15,8 @@ export const SuggestCategoryForm = Form.create({ name: 'add_category_in_modal' }
 
     onSuggestionChange = e => {
       const suggestedName = e.target.value.capitalize()
-      const available = !this.props.categories.map(c => c.title).includes(suggestedName)
+      const unavailable_list = this.props.categories.concat(this.props.suggestions)
+      const available = !unavailable_list.map(c => c.title).includes(suggestedName)
       this.setState({availableSuggestion: available, suggestedName:suggestedName})
       /*const form = this.props
       form.setFieldsValue(
