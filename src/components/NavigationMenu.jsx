@@ -38,7 +38,6 @@ class NavigationMenu extends Component {
   showSuggestModal = () => {
     this.setState(prevState => ({
       suggestionModal: {},
-      newSuggestion: !prevState.newSuggestion
     }));
   };
   /*
@@ -124,14 +123,12 @@ class NavigationMenu extends Component {
   }*/
 
   render() {
-    const newSuggestion = this.state.newSuggestion
     const { user } = this.props.userContext
     const modalConfirmLoading = this.state.suggestionModal && this.state.suggestionModal.confirmLoading
 
     return (
         <React.Fragment>
           <SuggestCategoryForm
-            key = {newSuggestion}
             wrappedComponentRef={this.saveFormRef}
             visible={Boolean(this.state.suggestionModal)}
             onConfirm={this.onSuggestionSubmission}

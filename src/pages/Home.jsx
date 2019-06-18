@@ -24,12 +24,20 @@ class Home extends Component {
   }
 
   getFilteredMarkers = function () {
-    const { points } = this.props
+    const { points, categories } = this.props
     const { nameFilter, categoryFilter } = this.state
     const filteredPoints = nameFilter(categoryFilter(points))
     return filteredPoints.map(point => {
-        let source_desc = point.hostname === "jugo-maps.herokuapp.com"? "Local": "Externo"
-        const source = <a href={point.source} target="_blank">Origen: {source_desc}</a>
+        const source = <a
+                          href={point.provider.site_url}
+                          target="_blank"
+                       >
+                       Origen: {point.provider.name}
+                       </a>
+        const categoryIcon = point.extern?
+                             categories.find( c => {return c.provider.cat_abs_id === point.provider.cat_abs_id}).icon
+                             :
+                             categories.find(c => {return c._id === point.categoryId}).icon
 
         return ({
             key: point._id,
@@ -46,7 +54,7 @@ class Home extends Component {
                              actions={[source]}
                            >
                              <Meta
-                               avatar={<Avatar src= {point.image} />}
+                               avatar={<Avatar src= {categoryIcon} />}
                                title={point.name}
                                description={point.description}
                              />
@@ -103,7 +111,9 @@ class Home extends Component {
       }
 
       //solo agregamos puntos de categorias locales
-      const categoryId = this.props.categories.find( c =>{ return values.categoryName === c.title})._id
+      //esto se podria hacer en el constructor de point
+      //en backend pero aca en memoria es mas rapido (aunque mas sucio)
+      const categoryId = this.props.categories.find( c =>{ return !c.extern && values.categoryName === c.title})._id
       const newPoint = {...values, 'categoryId':categoryId };
       const promise = poiAPI.add(newPoint)
       promise

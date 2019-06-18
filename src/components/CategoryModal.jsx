@@ -6,6 +6,12 @@ export const SuggestCategoryForm = Form.create({ name: 'add_category_in_modal' }
   class extends React.Component {
 
     state = {suggestedName: ""}
+    normFile = e => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+    };
 
     onSuggestionChange = e => {
       const suggestedName = e.target.value.capitalize()
@@ -60,9 +66,9 @@ export const SuggestCategoryForm = Form.create({ name: 'add_category_in_modal' }
             </Form.Item>
             <Form.Item label="Icono">
              {getFieldDecorator('icon', {
-               rules: [{ required: false}],
+               valuePropName: 'fileList', getValueFromEvent: this.normFile, rules: [{ required: false}],
              })(
-             <Upload beforeUpload={file => false} multiple={false}>
+             <Upload beforeUpload={file => false} listType="picture">
                <Button>
                  <Icon type="upload" /> Subir imagen
                </Button>
@@ -85,7 +91,12 @@ export const SuggestCategoryForm = Form.create({ name: 'add_category_in_modal' }
 
 export const CategoryEditForm = Form.create({ name: 'edit_category_in_modal' })(
   class extends React.Component {
-
+    normFile = e => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+    };
     render() {
       const { visible, onCancel, onConfirm, form, confirmLoading } = this.props;
       const { getFieldDecorator } = form;
@@ -106,9 +117,9 @@ export const CategoryEditForm = Form.create({ name: 'edit_category_in_modal' })(
               </Form.Item>
               <Form.Item label="Icono">
                {getFieldDecorator('icon_file', {
-                 rules: [{ required: false}],
+                 valuePropName: 'fileList', getValueFromEvent: this.normFile, rules: [{ required: false}],
                })(
-               <Upload beforeUpload={file => false} multiple={false} >
+               <Upload beforeUpload={file => false} listType="picture">
                  <Button>
                    <Icon type="upload" /> Subir imagen
                  </Button>

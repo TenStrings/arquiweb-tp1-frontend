@@ -151,10 +151,10 @@ class BackofficePoints extends Component {
         title: 'Origen',
         dataIndex: 'source',
         render: point => (<a
-                            href={point.source}
+                            href={point.provider.site_url}
                             target="_blank"
                           >
-                          {point.hostname}
+                          {point.provider.name}
                           </a>)
       },
       {
@@ -202,7 +202,6 @@ class BackofficePoints extends Component {
       <React.Fragment>
         <Table columns={columns} dataSource={data} scroll={{ y: 600 }} />
         <PointEditForm
-          key={this.state.refresh_edition_key}
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
           onCancel={this.onEditCancel}
