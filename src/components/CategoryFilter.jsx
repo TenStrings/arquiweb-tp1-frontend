@@ -5,15 +5,15 @@ const CheckableTag = Tag.CheckableTag;
 
 class CategoryFilter extends React.Component {
     state = {
-        selected_categories: new Set(this.props.categories.map(c => c._id))
+        selected_categories: new Set(this.props.categories.map(c => c.title))
     };
 
-    onTagChangeDo(categoryId, checked) {
+    onTagChangeDo(categoryName, checked) {
         this.setState(state => {
             const { selected_categories } = state
             const new_categories = new Set(selected_categories)
-            if (checked) new_categories.add(categoryId)
-            else new_categories.delete(categoryId)
+            if (checked) new_categories.add(categoryName)
+            else new_categories.delete(categoryName)
             return { selected_categories: new_categories }
         },
             this.notifyChange);
@@ -25,21 +25,22 @@ class CategoryFilter extends React.Component {
 
     filterPoints = points => {
         const { selected_categories } = this.state;
-        return points.filter(point => selected_categories.has(point.categoryId))
+        return points.filter(point => selected_categories.has(point.categoryName))
     }
 
     render() {
         const { selected_categories } = this.state;
+        let titles = new Set(this.props.categories.map(c => c.title))
         return (
             <div>
                 {
-                    this.props.categories.map(category => (
+                    Array.from(titles).map(title => (
                         <CheckableTag
-                            key={category._id}
-                            checked={selected_categories.has(category._id)}
-                            onChange={checked => this.onTagChangeDo(category._id, checked)}
+                            key={title}
+                            checked={selected_categories.has(title)}
+                            onChange={checked => this.onTagChangeDo(title, checked)}
                         >
-                            {category.title}
+                            {title}
                         </CheckableTag >
                     ))
                 }
