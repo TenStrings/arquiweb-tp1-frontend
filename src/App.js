@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import {withRouter} from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import './App.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -15,7 +15,7 @@ import UserProvider from './context/UserProvider';
 import { poiAPI, categoriesAPI, suggestionsAPI } from './api';
 
 const ContextLogin = withUserContext(withRouter(Login))
-const ContextSignUp = withUserContext(SignUp)
+const ContextSignUp = withUserContext(withRouter(SignUp))
 const AuthenticatedNavigationMenu = withRouter(withUserContext(NavigationMenu))
 const ContextBackofficePoints = withUserContext(BackofficePoints)
 const ContextBackofficeCategories = withUserContext(BackofficeCategories)
@@ -28,7 +28,7 @@ class App extends Component {
     points: [],
     categories: [],
     suggestions: [],
-    mocked_logedin: false
+    loggedIn: false,
   }
 
   //Data Loading
@@ -79,15 +79,15 @@ class App extends Component {
   //TODO this should add or remove the category from hidden_external_categories table in backend
   updateExternVisibility = (category) => {
     this.setState(prevState => {
-      let the_category = prevState.categories.find(c => c._id === category._id )
+      let the_category = prevState.categories.find(c => c._id === category._id)
       let index = prevState.categories.indexOf(the_category);
       let updated_categories = Object.assign([], prevState.categories)
       updated_categories[index] = category
       let updated_points = Object.assign([], prevState.points)
-      updated_points = updated_points.map(p=> ({...p, visible:category.visible}))
+      updated_points = updated_points.map(p => ({ ...p, visible: category.visible }))
       return ({
-          categories:updated_categories,
-          points: updated_points
+        categories: updated_categories,
+        points: updated_points
       })
     })
   }
@@ -104,8 +104,8 @@ class App extends Component {
   }
 
   //Log In
-  onLogIn = () => this.setState({mocked_logedin:true})
-  onLogOut = () => this.setState({mocked_logedin:false})
+  onLogIn = () => this.setState({ loggedIn: true })
+  onLogOut = () => this.setState({ loggedIn: false })
 
   render() {
     const { points, categories, suggestions } = this.state;
@@ -118,16 +118,14 @@ class App extends Component {
         <Router>
 
           <AuthenticatedNavigationMenu
-             mockedUser={this.state.mocked_logedin}
-             categories={ourCategories}
-             notifyLogOut={this.onLogOut}
-             notifyNewSuggestion={this.onNewSuggestion}
+            categories={categories}
+            notifyLogOut={this.onLogOut}
+            notifyNewSuggestion={this.onNewSuggestion}
           />
 
           <Switch>
             <Route exact path='/' render={props => (
               <Home
-                mockedUser={this.state.mocked_logedin}
                 points={visiblePoints}
                 categories={visibleCategories}
                 notifyPointChange={this.onPointChange}
@@ -159,6 +157,7 @@ class App extends Component {
             )}/>
 
             <Route path='/login' render={props => <ContextLogin notifyLogIn={this.onLogIn}/> } />
+
             <Route path='/register' component={ContextSignUp} />
 
           </Switch>

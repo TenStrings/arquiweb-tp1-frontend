@@ -14,6 +14,7 @@ class UserProvider extends Component {
             token: token,
             login: this.login,
             logout: this.logout,
+            register: this.register,
         }
     }
 
@@ -25,18 +26,18 @@ class UserProvider extends Component {
                 user: decode(token)["user_claims"]
             })
         } catch (err) {
-            alert(err);
+            message.error("Usuario no existe o credenciales inválidas");
         }
     }
 
     register = async (username, password) => {
         try {
-          let succeded = await userAPI.regiter(username, password)
+          let succeded = await userAPI.register(username, password)
           if(succeded) {
             message.success("Usuario registrado correctamente.")
           }
         } catch (err) {
-            message.error(err)
+            message.error("No se pudo registrar al usuario")
         }
     }
 

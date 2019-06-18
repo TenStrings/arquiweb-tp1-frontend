@@ -125,21 +125,13 @@ export const suggestionsAPI = {
 }
 
 export const userAPI = {
-    authenticate: function (username, password) {
-        return axios.post(
-            `${apiServer}/auth/login`,
-            { username: username, password: password }
-        ).then(
-            response => response["data"]["access_token"]
-        )
+    authenticate: async function (username, password) {
+        const response = await axios.post(`${apiServer}/auth/login`, { username: username, password: password });
+        return response["data"]["access_token"];
     },
-    register: function (username, password) {
-        return axios.post(
-            `${apiServer}/auth/register`,
-            { username: username, password: password }
-        ).then(
-            response => response["data"]["succeded"]
-        )
+    register: async function (username, password) {
+        const response = await axios.post(`${apiServer}/auth/register`, { username: username, password: password });
+        return response["data"]["succeded"];
     }
 }
 /*

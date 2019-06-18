@@ -198,7 +198,6 @@ class Home extends Component {
         <Row id="Mapa">
           <Col>
             <ContextMainMap
-              mockedUser = {this.props.mockedUser}
               markers={this.getFilteredMarkers()}
               onClick={this.onMapClick}
               showMyPosition={false}

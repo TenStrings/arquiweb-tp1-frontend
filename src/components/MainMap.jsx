@@ -77,22 +77,22 @@ class MainMap extends Component {
 
     onAddPointClick = () => {
         const { popup } = this.state
-        if ( this.props.userContext.user  || this.props.mockedUser) {
-          this.props.onNewPoint(popup.position)
-          this.setState({ popup: null })
+        if (this.props.userContext.user) {
+            this.props.onNewPoint(popup.position)
+            this.setState({ popup: null })
         }
         else {
-          this.props.history.push("/login");
+            this.props.history.push("/login");
         }
     }
 
     onClose() {
-        this.setState({collapsed: true});
+        this.setState({ collapsed: true });
     }
     onOpen(id) {
         this.setState({
-        collapsed: false,
-        selected: id,
+            collapsed: false,
+            selected: id,
         })
     }
 
@@ -101,18 +101,18 @@ class MainMap extends Component {
         return (
             <div >
                 <Sidebar
-                  id="sidebar"
-                  collapsed={this.state.collapsed}
-                  selected={this.state.selected}
-                  closeIcon={<Icon type="left"/>}
-                  onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}
+                    id="sidebar"
+                    collapsed={this.state.collapsed}
+                    selected={this.state.selected}
+                    closeIcon={<Icon type="left" />}
+                    onOpen={this.onOpen.bind(this)} onClose={this.onClose.bind(this)}
                 >
                     {this.props.tabs.map(tab =>
                         <Tab
                             id={tab.id}
                             key={tab.id}
                             header={tab.header}
-                            icon={<Icon type="search"/>}
+                            icon={<Icon type="search" />}
                         >
                             {tab.render}
                         </Tab>
