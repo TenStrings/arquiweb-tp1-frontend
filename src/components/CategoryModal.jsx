@@ -28,7 +28,7 @@ export const SuggestCategoryForm = Form.create({ name: 'add_category_in_modal' }
       const { visible, onConfirm, onCancel, form } = this.props;
       const { suggestedName, availableSuggestion } = this.state;
       const { getFieldDecorator } = form;
-      const { suggestionNonEmpty } = suggestedName.length !== 0
+      const  suggestionNonEmpty  = suggestedName.length !== 0
       let alert = ""
       if (suggestionNonEmpty){
         if(availableSuggestion){
@@ -76,9 +76,8 @@ export const SuggestCategoryForm = Form.create({ name: 'add_category_in_modal' }
                )
              }
             </Form.Item>
-            {
-              suggestionNonEmpty &&
-              <Form.Item label="Message">
+            { suggestionNonEmpty &&
+              <Form.Item label="">
               {alert}
               </Form.Item>
             }
