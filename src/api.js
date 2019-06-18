@@ -6,8 +6,7 @@ const apiServer = process.env.REACT_APP_HEROKU ?
 
 export const poiAPI = {
     get: async function () {
-        let points = (await axios.get(`${apiServer}/point`)).data;
-        return points
+        return (await axios.get(`${apiServer}/point`)).data;
     },
     add: function (point) {
         const formData = new FormData();
@@ -16,12 +15,11 @@ export const poiAPI = {
         formData.append('positionLat', point.position.lat)
         formData.append('positionLng', point.position.lng)
         formData.append('description', point.description)
-        let has_file = point.image_file && point.image_file.file? true: false;
+        let has_file = point.image_file && point.image_file.length>0;
         formData.append('has_file', has_file );
-        if (has_file)formData.append('file', point.image_file.file);
+        if (has_file)formData.append('file', point.image_file[0].originFileObj);
         formData.append('categoryId', point.categoryId)
         formData.append('categoryName', point.categoryName)
-        console.log(formData.position)
         return axios.post(
             `${apiServer}/point`,
             formData
@@ -33,9 +31,9 @@ export const poiAPI = {
         formData.append('position', point.position)
         formData.append('description', point.description)
         formData.append('image', point.image)
-        let has_file = point.image_file && point.image_file.file? true: false;
+        let has_file = point.image_file && point.image_file.length>0;
         formData.append('has_file', has_file );
-        if (has_file)formData.append('file', point.image_file.file);
+        if (has_file)formData.append('file', point.image_file[0].originFileObj);
         formData.append('categoryId', point.categoryId)
         formData.append('categoryName', point.categoryName)
 
@@ -62,8 +60,8 @@ export const poiAPI = {
 }
 
 export const categoriesAPI = {
-    get: function () {
-        return axios.get(`${apiServer}/category`);
+    get: async function () {
+        return (await axios.get(`${apiServer}/category`)).data;
     },
     add: function (category, token) {  //the file was uploaded in the suggestion and we only add categories that were a suggestion
         return axios.post(
@@ -76,9 +74,9 @@ export const categoriesAPI = {
         const formData = new FormData();
         formData.append('title', category.title)
         formData.append('icon', category.icon)
-        let has_file = category.icon_file && category.icon_file.file ? true:false
+        let has_file = category.icon_file && category.icon_file.length >0
         formData.append('has_file', has_file );
-        if(has_file) formData.append('file', category.icon_file.file);
+        if(has_file) formData.append('file', category.icon_file[0].originFileObj);
         return axios.put(
             `${apiServer}/category/${category._id}`,
             formData, { headers: { "Authorization": `Bearer ${token}` } }
@@ -102,15 +100,15 @@ export const categoriesAPI = {
 }
 
 export const suggestionsAPI = {
-    get: function () {
-        return axios.get(`${apiServer}/suggested_category`);
+    get: async function () {
+        return (await axios.get(`${apiServer}/suggested_category`)).data;
     },
     add: function (suggestion) {
       const formData = new FormData();
       formData.append('title', suggestion.title)
-      let has_file = suggestion.icon && suggestion.icon.file ? true:false
+      let has_file = suggestion.icon && suggestion.icon.length>0
       formData.append('has_file', has_file );
-      if(has_file) formData.append('file', suggestion.icon.file);
+      if(has_file) formData.append('file', suggestion.icon[0].originFileObj);
 
       return axios.post(
           `${apiServer}/suggested_category`,

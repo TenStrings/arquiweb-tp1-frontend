@@ -4,6 +4,13 @@ import { Select } from 'antd';
 
 export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
   class extends React.Component {
+    normFile = e => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+    };
+
     render() {
       const { visible, onCancel, onConfirm, form, categories } = this.props;
       const { getFieldDecorator } = form;
@@ -24,12 +31,11 @@ export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
               <Form.Item label="Descripción">
                 {getFieldDecorator('description')(<Input type="textarea" />)}
               </Form.Item>
-
               <Form.Item label="Imagen">
                  {getFieldDecorator('image_file', {
-                   rules: [{ required:false }],
+                   valuePropName: 'fileList', getValueFromEvent: this.normFile, rules: [{ required:false }],
                  })(
-                 <Upload beforeUpload={file => false}>
+                 <Upload beforeUpload={file => false} listType="picture" >
                    <Button>
                      <Icon type="upload" /> Subir imagen
                    </Button>
@@ -58,6 +64,13 @@ export const PointEditForm = Form.create({ name: 'edit_point_in_modal' })(
 
 export const PointAddForm = Form.create({ name: 'add_point_in_modal' })(
   class extends React.Component {
+    normFile = e => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+    };
+
     render() {
       const { visible, onCancel, onConfirm, form, categories } = this.props;
       const { getFieldDecorator } = form;
@@ -80,9 +93,9 @@ export const PointAddForm = Form.create({ name: 'add_point_in_modal' })(
             </Form.Item>
             <Form.Item label="Imagen">
              {getFieldDecorator('image_file', {
-               rules: [{ required: false}],
+               valuePropName: 'fileList', getValueFromEvent: this.normFile, rules: [{ required: false}],
              })(
-             <Upload beforeUpload={file => false}>
+             <Upload beforeUpload={file => false} listType="picture">
                <Button>
                  <Icon type="upload" /> Subir imagen
                </Button>

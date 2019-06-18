@@ -1,3 +1,4 @@
+
 import React, { Component } from 'react';
 import { Table, Button, Switch, message } from 'antd';
 import { CategoryEditForm } from '../components/CategoryModal';
@@ -9,7 +10,6 @@ class BackofficeCategories extends Component {
 
   updateCategory(category) {
     const { notifyCategoryChange } = this.props
-    console.log(category.extern)
     return categoriesAPI
       .update(category)
       .then(() => notifyCategoryChange())
@@ -63,7 +63,6 @@ class BackofficeCategories extends Component {
           category: category,
           confirmLoading: false
         },
-        refresh_edition_key: !prevState.refresh_edition_key,
       }))
     )
   }
@@ -163,7 +162,7 @@ class BackofficeCategories extends Component {
               onChange={
                 checked => this.onVisibilityChange(checked, category)}
             />,
-          source: <a href={category.source}  target="_blank">{category.hostname}</a>,
+          source: <a href={category.provider.site_url}  target="_blank">{category.provider.name}</a>,
           edit: !category.extern && <Button type="primary" shape="circle" icon="edit"
                         onClick={() => this.showEditModal(category)}
                 />,
@@ -179,7 +178,6 @@ class BackofficeCategories extends Component {
       <React.Fragment>
         <Table columns={columns} dataSource={data} scroll={{ y: 600 }} />;
         <CategoryEditForm
-          key={this.state.refresh_edition_key}
           wrappedComponentRef={this.saveFormRef}
           visible={Boolean(this.state.modal)}
           onCancel={this.onEditCancel}

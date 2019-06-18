@@ -13,8 +13,6 @@ import NavigationMenu from './components/NavigationMenu';
 import { withUserContext } from './context/withUserContext';
 import UserProvider from './context/UserProvider';
 import { poiAPI, categoriesAPI, suggestionsAPI } from './api';
-import { adaptExternData } from './extern_apis';
-
 
 const ContextLogin = withUserContext(withRouter(Login))
 const ContextSignUp = withUserContext(withRouter(SignUp))
@@ -22,6 +20,7 @@ const AuthenticatedNavigationMenu = withRouter(withUserContext(NavigationMenu))
 const ContextBackofficePoints = withUserContext(BackofficePoints)
 const ContextBackofficeCategories = withUserContext(BackofficeCategories)
 const ContextBackofficeSuggestions = withUserContext(BackofficeSugCategories)
+
 
 class App extends Component {
 
@@ -34,89 +33,51 @@ class App extends Component {
 
   //Data Loading
   componentDidMount() {
-    this.loadOurPoints()
-    this.loadOurCategories()
-    this.loadOurSuggestions()
-    this.loadExternData()
-    /*  setInterval(() => {
-        this.loadOurPoints()
-        this.loadOurCategories()
-        this.loadOurSuggestions()
-        this.loadExternData()
-      }, 20000); */
+    this.loadPoints()
+    this.loadCategories()
+    this.loadSuggestions()
+    /*setInterval(() => {
+      this.loadPoints()
+      this.loadCategories()
+    }, 20000);*/
   }
 
-  loadOurPoints = () => {
+  loadPoints = () => {
     poiAPI.get()
-      .then(res => {
-        let our_points = res.map(p => ({ ...p, extern: false, source: "https://jugo-maps.herokuapp.com/", hostname: "jugo-maps.herokuapp.com" }))
-        this.setState(prevState => {
-          let extern_points = prevState.points.filter(p => p.extern)
-          return { points: our_points.concat(extern_points) }
-        });;
-      });
+    .then(res => {
+      this.setState({ points: res });
+    });
   }
 
-  loadOurCategories = () => {
+  loadCategories = () => {
     categoriesAPI.get()
-      .then(res => {
-        let our_categories = res.data.map(c => ({ ...c, extern: false, source: "https://jugo-maps.herokuapp.com/", hostname: "jugo-maps.herokuapp.com" }))
-        this.setState(prevState => {
-          let extern_categories = prevState.categories.filter(c => c.extern)
-          return { categories: our_categories.concat(extern_categories) }
-        });
-      })
-  }
-
-  loadOurSuggestions = () => {
-    suggestionsAPI.get()
-      .then(res => {
-        let our_suggestions = []
-        res.data.forEach(s => our_suggestions.push({ ...s, extern: false }))
-        this.setState({ suggestions: our_suggestions });
-      })
-  }
-
-  loadExternData = async () => {
-    let extern = await adaptExternData()
-    this.setState(prevState => {
-      let our_categories = prevState.categories.filter(c => !c.extern)
-      let our_points = prevState.points.filter(p => !p.extern)
-      let extern_categories = extern.categories.map(c => {
-        const we_have_this_cat = prevState.categories.find(cat => cat._id === c.id)
-        if (we_have_this_cat) {
-          return ({ ...c, visible: we_have_this_cat.visible })
-        } else {
-          return c
-        }
-      })
-      let extern_points = extern.points.map(p => {
-        const we_have_this_cat = prevState.categories.find(cat => cat._id === p.categoryId)
-        if (we_have_this_cat) {
-          return ({ ...p, visible: we_have_this_cat.visible })
-        } else {
-          return p
-        }
-      })
-      return ({
-        points: our_points.concat(extern_points),
-        categories: our_categories.concat(extern_categories)
-      })
+    .then(res => {
+      this.setState({ categories: res });
     })
   }
 
+  loadSuggestions = () => {
+    suggestionsAPI.get()
+    .then(res => {
+      this.setState({ suggestions: res });
+    })
+  }
 
   //**** Data reloading triggers  ****/
+  //TODO just reload by id instead of everything
   onPointChange = () => {
-    this.loadOurPoints()
+    this.loadPoints()
+    this.loadCategories()
   }
 
+  //TODO Just reload the modified category and points of that category
   onCategoryChange = () => {
-    this.loadOurPoints()
-    this.loadOurCategories()
+    this.loadPoints()
+    this.loadCategories()
   }
 
-  updateExternVisibily = (category) => {
+  //TODO this should add or remove the category from hidden_external_categories table in backend
+  updateExternVisibility = (category) => {
     this.setState(prevState => {
       let the_category = prevState.categories.find(c => c._id === category._id)
       let index = prevState.categories.indexOf(the_category);
@@ -131,13 +92,15 @@ class App extends Component {
     })
   }
 
+  //TODO get only the new one by name
   onNewSuggestion = () => {
-    this.loadOurSuggestions()
+    this.loadSuggestions()
   }
 
+  //TODO get only the new category by name
   onSuggestionSolved = was_accepted => {
-    this.loadOurSuggestions()
-    if (was_accepted) this.loadOurCategories()
+    this.loadSuggestions()
+    if (was_accepted) this.loadCategories()
   }
 
   //Log In
@@ -147,8 +110,9 @@ class App extends Component {
   render() {
     const { points, categories, suggestions } = this.state;
     const visiblePoints = points.filter(p => p.visible)
-    const ourPoints = points.filter(p => !p.extern)
     const visibleCategories = categories.filter(c => c.visible)
+    const ourPoints = points.filter(p => !p.extern)
+    const ourCategories = categories.filter(c => !c.extern)
     return (
       <UserProvider>
         <Router>
@@ -168,31 +132,32 @@ class App extends Component {
               />
             )} />
 
-            <Route path="/backoffice_points" render={props => (
-              <ContextBackofficePoints
-                points={ourPoints}
-                categories={categories} //ver por q es necesario
-                notifyPointChange={this.onPointChange}
-              />
-            )} />
+            <Route path="/backoffice_points" render={ props => (
+                <ContextBackofficePoints
+                  points={ourPoints}
+                  categories={ourCategories}
+                  notifyPointChange={this.onPointChange}
+                />
+              )} />
 
-            <Route path='/backoffice_approved_categories' render={props => (
-              <ContextBackofficeCategories
-                key={categories}
-                categories={categories}
-                notifyCategoryChange={this.onCategoryChange}
-                onExternVisibilyChange={this.updateExternVisibily}
-              />
-            )} />
+            <Route path='/backoffice_approved_categories' render={ props => (
+                <ContextBackofficeCategories
+                  key={categories}
+                  categories={categories}
+                  notifyCategoryChange={this.onCategoryChange}
+                  onExternVisibilyChange={this.updateExternVisibility}
+                />
+            )}/>
 
-            <Route path='/backoffice_suggested_categories' render={props => (
-              <ContextBackofficeSuggestions
-                suggestions={suggestions}
-                notifySuggestionSolved={this.onSuggestionSolved}
-              />
-            )} />
+            <Route path='/backoffice_suggested_categories' render={ props => (
+                <ContextBackofficeSuggestions
+                  suggestions={suggestions}
+                  notifySuggestionSolved={this.onSuggestionSolved}
+                />
+            )}/>
 
-            <Route path='/login' render={props => <ContextLogin notifyLogIn={this.onLogIn} />} />
+            <Route path='/login' render={props => <ContextLogin notifyLogIn={this.onLogIn}/> } />
+
             <Route path='/register' component={ContextSignUp} />
 
           </Switch>
