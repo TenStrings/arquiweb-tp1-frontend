@@ -34,11 +34,14 @@ class Home extends Component {
                        >
                        Origen: {point.provider.name}
                        </a>
-        const categoryIcon = point.extern?
-                             categories.find( c => {return c.provider.cat_abs_id === point.provider.cat_abs_id}).icon
-                             :
-                             categories.find(c => {return c._id === point.categoryId}).icon
-
+        let categoryIcon = ""
+        let category = null
+        if(point.extern){
+            category = categories.find( c => {return c.provider.cat_abs_id === point.provider.cat_abs_id})
+        }else {
+            category = categories.find(c => {return c._id === point.categoryId})
+        }
+        if(category !== undefined) categoryIcon = category.icon 
         return ({
             key: point._id,
             position: point.position,
